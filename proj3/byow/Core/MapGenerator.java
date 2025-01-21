@@ -50,43 +50,16 @@ import java.util.Random;
 
 public class MapGenerator {
     private static final List<Room> rooms = new ArrayList<>();
-    private Random random;
+    private static TETile[][] world;
+    private static int width;
+    private static int height;
 
-    private static class Room {
-        private static final TETile tile = Tileset.FLOOR;
-        private Position topLeft;
-        private Position bottomRight;
-
-        private void draw(TETile[][] world, int width, int height) {
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    world[topLeft.getX() + i][topLeft.getY() - j] = tile;
-                }
-            }
-        }
-
-        private Position getTopLeft() {
-            return topLeft;
-        }
-
-        private Position getBottomRight() {
-            return bottomRight;
-        }
-
-        public Room(TETile[][] world, Position topLeft, int width, int height) {
-            this.topLeft = topLeft;
-            this.bottomRight = new Position(topLeft.getX() + width, topLeft.getY() - height);
-            this.draw(world, width, height);
-            rooms.add(this);
-        }
-
-    }
-
-    public boolean isOverlap(Position topLeft, int width, int height) {
+    public boolean isOverlap(Room r) {
+        Position topLeft = r.getTopLeft();
+        Position topRight = new Position(topLeft.getX() + r.getWidth(), topLeft.getY());
+        Position bottomLeft = new Position(topLeft.getX(), topLeft.getY() - r.getHeight());
+        Position bottomRight = r.getBottomRight();
         for (Room room : rooms) {
-            Position topRight = new Position(topLeft.getX() + width, topLeft.getY());
-            Position bottomLeft = new Position(topLeft.getX(), topLeft.getY() - height);
-            Position bottomRight = new Position(topLeft.getX() + width, topLeft.getY() - height);
             if(topLeft.getX() >= room.getTopLeft().getX() && topLeft.getX() <= room.getBottomRight().getX()
                     && topLeft.getY() <= room.getTopLeft().getY() && topLeft.getY() >= room.getBottomRight().getY()) {
                 return true;
@@ -108,7 +81,7 @@ public class MapGenerator {
                 return true;
             }
             if(topLeft.getX() == room.getBottomRight().getX() && topLeft.getY() > room.getTopLeft().getY()
-                && bottomLeft.getY() < room.getBottomRight().getY()) {
+                    && bottomLeft.getY() < room.getBottomRight().getY()) {
                 return true;
             }
             if(bottomLeft.getX() < room.getTopLeft().getX() && bottomRight.getX() > room.getBottomRight().getX()
@@ -123,8 +96,71 @@ public class MapGenerator {
         return false;
     }
 
-    public MapGenerator(int seed) {
-        this.random = new Random(seed);
+    private void initializeWorld() {
+        for (int x = 0; x < width; x += 1) {
+            for (int y = 0; y < height; y += 1) {
+                world[x][y] = Tileset.NOTHING;
+            }
+        }
+    }
+
+    public int randomMapLeftOffset(Random random) {
+        return random.nextInt((int) (0.25 * width) - 1) + 1;
+    }
+
+    public int randomMapTopOffset(Random random) {
+        return random.nextInt((int) (0.2 * height) - 1) + 1;
+    }
+
+    public int randomMapBottomOffset(Random random) {
+        return random.nextInt((int) (0.1 * height) - 1) + 1;
+    }
+
+    public int randomNumOfRooms(Random random, int mapWidth, int mapHeight) {
+        int n = (int) (mapWidth / ((RoomGenerator.getRoomMaxWidth() + 1) / 2 + 3) *
+                mapHeight / (RoomGenerator.getRoomMaxHeight() + 1) / 2 + 3);
+        return random.nextInt((int) (0.2 * n)) + (int) (0.6 * n);
+    }
+
+    public int randomMapWidth(Random random, int mapLeftOffset) {
+        // 60 20
+        int mapWidth = random.nextInt((int) (0.75 * width)) + (int) (0.25 * width);
+        // 79 + 3 > 80
+        if (mapWidth + mapLeftOffset > width) {
+            mapWidth = width - mapLeftOffset;
+        }
+        return mapWidth;
+    }
+
+    public MapGenerator(int seed, int width, int height) {
+        Random random = new Random(seed);
+        this.width = width;
+        this.height = height;
+        this.world = new TETile[width][height];
+        initializeWorld();
+        //1 - 19
+        int mapLeftOffset = randomMapLeftOffset(random);
+        //1 - 5
+        int mapTopOffset = randomMapTopOffset(random);
+        //1 - 2
+        int mapbottomOffset = randomMapBottomOffset(random);
+        int mapWidth = randomMapWidth(random, mapLeftOffset);
+        //30 - 1 - 1
+        int mapHeight = height - mapTopOffset - mapbottomOffset;
+
+        RoomGenerator rg = new RoomGenerator(random, mapWidth, mapHeight, mapLeftOffset, mapTopOffset);
+        int numOfRooms = randomNumOfRooms(random, mapWidth, mapHeight);
+        for (int i = 0; i < numOfRooms; i++) {
+            while(true) {
+                Room room = rg.generate();
+                if (!isOverlap(room)) {
+                    room.draw(world);
+                    rooms.add(room);
+                    break;
+                }
+            }
+        }
+
     }
 
     public static void main(String[] args) {
@@ -132,16 +168,10 @@ public class MapGenerator {
         ter.initialize(80, 30);
 
         // initialize tiles
-        TETile[][] world = new TETile[80][30];
-        for (int x = 0; x < 80; x += 1) {
-            for (int y = 0; y < 30; y += 1) {
-                world[x][y] = Tileset.NOTHING;
-            }
-        }
-        for (int i = 0; i < 1; i++) {
-            Room r = new Room(world, new Position(0, 2), 4, 2);
-        }
-        Room r1 = new Room(world, new Position(0, 2), 4, 2);
+        MapGenerator mg = new MapGenerator(314, 80, 30);
+
+        //Room r1 = new Room(new Position(0, 2), 4, 3);
+        //r1.draw(world);
         // draws the world to the screen
         ter.renderFrame(world);
     }
