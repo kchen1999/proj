@@ -1,58 +1,29 @@
 package byow.Core;
 
-/*
-How it works in detail:
-Step 1: Room Placement
-
-Randomly place a set of rooms (rectangular or other shapes) on the grid.
-Ensure that the rooms don’t overlap by checking positions or using a grid-based allocation strategy.
-Assign random widths and heights to the rooms.
-
-Step 2: Random Walk for Hallways
-
-Start from one room (or multiple rooms if preferred).
-Move in a random direction (up, down, left, right), and carve out the hallway tiles. At each step, you can
-randomly change direction to create turns.
-The random walk can be terminated after a certain length or when it reaches another room. Ensure that the path
-ends in an intersection if needed (this can be enforced programmatically).
-
-Step 3: Ensure Connectivity
-
-If the random walk does not connect some rooms (due to the random nature of the path), additional random walks
-or post-processing can be used to fill in the gaps, ensuring that every room is reachable.
-
-Step 4: Randomization of Hallways
-
-Vary the width of hallways (1 or 2 tiles).
-Include intersections or multiple paths that branch off the main hallways to enhance the world’s complexity.
-
-Step 5: Tile Representation
-
-Convert the grid into a tile-based system with walls, floors, and unused spaces.
-Use different tiles for walls and floors to ensure visual distinction.
-The unused spaces (e.g., areas not connected to hallways) can be represented with a unique tile type.
-
-Step 6: Post-Processing (Optional)
-
-Use Cellular Automata for further refinement of the world layout (e.g., smoothing out walls, adding caves, etc.).
-Introduce optional outdoor spaces or thematic features that fit within the generated grid.
-
- */
-
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Random;
+
 
 
 public class MapGenerator {
     private static final List<Room> rooms = new ArrayList<>();
+    private static final Set<Path> paths = new TreeSet<>();
     private static TETile[][] world;
     private static int width;
     private static int height;
+
+    private void addPath(Room room) {
+        for (Room r: rooms) {
+            paths.add(new Path(room, r));
+        }
+    }
 
     private boolean xCoordCornerOverlap(int newRoomCornerX, int existingRoomLeftX, int existingRoomRightX) {
         return (newRoomCornerX >= existingRoomLeftX && newRoomCornerX <= existingRoomRightX)
@@ -63,55 +34,55 @@ public class MapGenerator {
         return newRoomLeftSideX <= existingRoomLeftSideX && newRoomRightSideX >= existingRoomRightSideX;
     }
 
-    private boolean yCoordSideOverlap(int newRoomTopSideY, int newRoomBottomSideY, int existingRoomTopSideY, int existingRoomBottomSideY) {
-        return newRoomTopSideY >= existingRoomTopSideY && newRoomBottomSideY <= existingRoomBottomSideY;
-    }
-
     private boolean yCoordCornerOverlap(int newRoomCornerY, int existingRoomTopY, int existingRoomBottomY) {
         return (newRoomCornerY <= existingRoomTopY && newRoomCornerY >= existingRoomBottomY)
                 || existingRoomBottomY - newRoomCornerY == 1 || newRoomCornerY - existingRoomTopY == 1;
     }
 
-    public boolean isOverlap(Room r) {
-        Position topLeft = r.getTopLeft();
-        Position topRight = new Position(topLeft.getX() + r.getWidth(), topLeft.getY());
-        Position bottomLeft = new Position(topLeft.getX(), topLeft.getY() - r.getHeight());
-        Position bottomRight = r.getBottomRight();
-        for (Room room : rooms) {
-            if(xCoordCornerOverlap(topLeft.getX(), room.getTopLeft().getX(), room.getBottomRight().getX())
-                && yCoordCornerOverlap(topLeft.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())) {
+    private boolean yCoordSideOverlap(int newRoomTopSideY, int newRoomBottomSideY, int existingRoomTopSideY, int existingRoomBottomSideY) {
+        return newRoomTopSideY >= existingRoomTopSideY && newRoomBottomSideY <= existingRoomBottomSideY;
+    }
+
+    public boolean isOverlap(Room room) {
+        Position topLeft = room.getTopLeft();
+        Position topRight = new Position(topLeft.getX() + room.getWidth(), topLeft.getY());
+        Position bottomLeft = new Position(topLeft.getX(), topLeft.getY() - room.getHeight());
+        Position bottomRight = room.getBottomRight();
+        for (Room r : rooms) {
+            if(xCoordCornerOverlap(topLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+                && yCoordCornerOverlap(topLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordCornerOverlap(topRight.getX(), room.getTopLeft().getX(), room.getBottomRight().getX())
-                    && yCoordCornerOverlap(topRight.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())) {
+            if(xCoordCornerOverlap(topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+                    && yCoordCornerOverlap(topRight.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordCornerOverlap(bottomLeft.getX(), room.getTopLeft().getX(), room.getBottomRight().getX())
-                    && yCoordCornerOverlap(bottomLeft.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())) {
+            if(xCoordCornerOverlap(bottomLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+                    && yCoordCornerOverlap(bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordCornerOverlap(bottomRight.getX(), room.getTopLeft().getX(), room.getBottomRight().getX())
-                    && yCoordCornerOverlap(bottomRight.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())) {
+            if(xCoordCornerOverlap(bottomRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+                    && yCoordCornerOverlap(bottomRight.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordSideOverlap(topLeft.getX(), topRight.getX(), room.getTopLeft().getX(), room.getBottomRight().getX())
-                    && yCoordCornerOverlap(topLeft.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())) {
+            if(xCoordSideOverlap(topLeft.getX(), topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+                    && yCoordCornerOverlap(topLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordSideOverlap(bottomLeft.getX(), bottomRight.getX(), room.getTopLeft().getX(), room.getBottomRight().getX())
-                    && yCoordCornerOverlap(bottomRight.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())) {
+            if(xCoordSideOverlap(bottomLeft.getX(), bottomRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+                    && yCoordCornerOverlap(bottomRight.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())
-                    && xCoordCornerOverlap(topLeft.getX(), room.getTopLeft().getX(), room.getBottomRight().getX())) {
+            if(yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())
+                    && xCoordCornerOverlap(topLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())) {
                 return true;
             }
-            if(yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())
-                    && xCoordCornerOverlap(bottomRight.getX(), room.getTopLeft().getY(), room.getBottomRight().getY())) {
+            if(yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())
+                    && xCoordCornerOverlap(bottomRight.getX(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordSideOverlap(topLeft.getX(), topRight.getX(), room.getTopLeft().getX(), room.getBottomRight().getX())
-                    && yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), room.getTopLeft().getY(), room.getBottomRight().getY())) {
+            if(xCoordSideOverlap(topLeft.getX(), topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+                    && yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
         }
@@ -160,9 +131,9 @@ public class MapGenerator {
         initializeWorld();
         int mapLeftOffset = randomMapLeftOffset(random);
         int mapTopOffset = randomMapTopOffset(random);
-        int mapbottomOffset = randomMapBottomOffset(random);
+        int mapBottomOffset = randomMapBottomOffset(random);
         int mapWidth = randomMapWidth(random, mapLeftOffset);
-        int mapHeight = height - mapTopOffset - mapbottomOffset;
+        int mapHeight = height - mapTopOffset - mapBottomOffset;
 
         RoomGenerator rg = new RoomGenerator(random, mapWidth, mapHeight, mapLeftOffset, mapTopOffset);
         int numOfRooms = randomNumOfRooms(random, mapWidth, mapHeight);
@@ -173,6 +144,7 @@ public class MapGenerator {
                     room.draw(world);
                     room.printRoom();
                     //System.out.println("");
+                    addPath(room);
                     rooms.add(room);
                     break;
                 }
@@ -186,7 +158,7 @@ public class MapGenerator {
         ter.initialize(80, 30);
 
         // initialize tiles
-        MapGenerator mg = new MapGenerator(330, 80, 30);
+        MapGenerator mg = new MapGenerator(332, 80, 30);
 
         //Room r1 = new Room(new Position(0, 2), 4, 3);
         //r1.draw(world);

@@ -18,6 +18,12 @@ public class Room {
         }
     }
 
+    public Position getCentre() {
+        int x = (topLeft.getX() + bottomRight.getX()) / 2;
+        int y = (topLeft.getY() + bottomRight.getY()) / 2;
+        return new Position(x, y);
+    }
+
     public int getWidth() {
         return width;
     }
@@ -46,6 +52,5 @@ public class Room {
         this.width = width;
         this.height = height;
     }
-
 
 }
