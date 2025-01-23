@@ -11,9 +11,9 @@ public class Room {
     private int height;
 
     public void draw(TETile[][] world) {
-        for (int i = 1; i < width + 1; i++) {
-            for (int j = 1; j < height + 1; j++) {
-                world[topLeft.getX() + i - 1][topLeft.getY() - j + 1] = tile;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                world[topLeft.getX() + i][topLeft.getY() - j] = tile;
             }
         }
     }
@@ -48,7 +48,7 @@ public class Room {
 
     public Room(Position topLeft, int width, int height) {
         this.topLeft = topLeft;
-        this.bottomRight = new Position(topLeft.getX() + width, topLeft.getY() - height);
+        this.bottomRight = new Position(topLeft.getX() + width - 1, topLeft.getY() - height + 1);
         this.width = width;
         this.height = height;
     }

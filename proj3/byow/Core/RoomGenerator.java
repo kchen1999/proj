@@ -29,8 +29,8 @@ public class RoomGenerator {
     public Room generate() {
         Position topLeft = randomTopLeftPosition();
         int randomWidth, randomHeight;
-        if (mapLeftOffset + mapWidth - topLeft.getX() - 1 < ROOM_MAX_WIDTH) { //check other bound
-            randomWidth = random.nextInt(mapLeftOffset + mapWidth - 1 - topLeft.getX());
+        if (mapLeftOffset + mapWidth - topLeft.getX() < ROOM_MAX_WIDTH) { //check other bound
+            randomWidth = random.nextInt(mapLeftOffset + mapWidth - topLeft.getX());
         } else {
             randomWidth = random.nextInt(ROOM_MAX_WIDTH) + 1;
         }
