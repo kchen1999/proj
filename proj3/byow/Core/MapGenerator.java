@@ -11,7 +11,6 @@ import java.util.TreeSet;
 import java.util.Random;
 
 
-
 public class MapGenerator {
     private static final List<Room> rooms = new ArrayList<>();
     private static final Set<Path> paths = new TreeSet<>();
@@ -22,6 +21,7 @@ public class MapGenerator {
     private void addPath(Room room) {
         for (Room r: rooms) {
             paths.add(new Path(room, r));
+
         }
     }
 
@@ -142,14 +142,13 @@ public class MapGenerator {
                 Room room = rg.generate();
                 if (!isOverlap(room)) {
                     room.draw(world);
-                    room.printRoom();
-                    //System.out.println("");
                     addPath(room);
                     rooms.add(room);
                     break;
                 }
             }
         }
+        HallWay.generate(world, paths, numOfRooms);
 
     }
 
@@ -158,7 +157,7 @@ public class MapGenerator {
         ter.initialize(80, 30);
 
         // initialize tiles
-        MapGenerator mg = new MapGenerator(332, 80, 30);
+        MapGenerator mg = new MapGenerator(335, 80, 30);
 
         //Room r1 = new Room(new Position(0, 2), 4, 3);
         //r1.draw(world);
