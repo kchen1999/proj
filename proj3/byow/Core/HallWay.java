@@ -10,7 +10,7 @@ public class HallWay {
     private static Set<Room> connectedRooms = new HashSet<>();
     private static final TETile tile = Tileset.WATER;
 
-    private boolean isConnected(Room room) {
+    private static boolean isConnected(Room room) {
         return connectedRooms.contains(room);
     }
 
@@ -21,9 +21,16 @@ public class HallWay {
         }
     }
 
-    private static void drawHorizontalHallWay(TETile[][] world, Position left, Position right) {
+    private static void drawHorizontalHallWayLtoR(TETile[][] world, Position left, Position right) {
         int j = left.getY();
         for (int i = left.getX() + 1; i < right.getX(); i++) {
+            world[i][j] = tile;
+        }
+    }
+
+    private static void drawHorizontalHallWayRtoL(TETile[][] world, Position right, Position left) {
+        int j = right.getY();
+        for (int i = right.getX() - 1; i >= left.getX(); i--) {
             world[i][j] = tile;
         }
     }
@@ -31,21 +38,25 @@ public class HallWay {
     private static void drawHallWay(TETile[][] world, Room start, Room end) {
         if (start.getTopLeft().getX() == end.getTopLeft().getX()) {
             drawVerticalHallWay(world, start.getTopLeft(), end.getBottomRight());
-            connectedRooms.add(start);
-            connectedRooms.add(end);
         } else if (start.getTopLeft().getY() == end.getTopLeft().getY()) {
-              drawHorizontalHallWay(world, new Position(start.getTopLeft().getX() + start.getWidth() - 1,
-                start.getTopLeft().getY()), end.getTopLeft());
-           // connectedRooms.add(start);
-           // connectedRooms.add(end);
+            drawHorizontalHallWayLtoR(world, new Position(start.getTopLeft().getX() + start.getWidth() - 1, start.getTopLeft().getY()),
+                    end.getTopLeft());
+        }  else if (start.getTopLeft().getY() < end.getTopLeft().getY()) {
+            drawHorizontalHallWayLtoR(world, new Position(start.getTopLeft().getX() + start.getWidth() - 1, start.getTopLeft().getY()),
+                    new Position(end.getTopLeft().getX() + 1, start.getTopLeft().getY()));
+            drawVerticalHallWay(world, new Position(end.getTopLeft().getX(), start.getTopLeft().getY()),
+                    new Position(end.getTopLeft().getX(), end.getBottomRight().getY()));
+        }   else if(start.getTopLeft().getY() > end.getTopLeft().getY()) {
+            drawHorizontalHallWayRtoL(world, new Position(end.getTopLeft().getX(), end.getTopLeft().getY()),
+                    new Position(start.getBottomRight().getX(), end.getTopLeft().getY()));
+            drawVerticalHallWay(world, new Position(start.getBottomRight().getX(), end.getTopLeft().getY()),
+                    start.getBottomRight());
         }
 
     }
 
     private static void union(TETile[][] world, Path path) {
         drawHallWay(world, path.getStart(), path.getEnd());
-        //connectedRooms.add(path.getStart());
-        //connectedRooms.add(path.getEnd());
     }
 
     public static void generate(TETile[][] world, Set<Path> paths, int numOfRooms) {
@@ -53,8 +64,18 @@ public class HallWay {
             if (connectedRooms.size() == numOfRooms) {
                 return;
             }
-            if (!connectedRooms.contains(path.getStart()) || !connectedRooms.contains(path.getEnd())) {
+            if (connectedRooms.size() == 0) {
                 union(world, path);
+                connectedRooms.add(path.getStart());
+                connectedRooms.add(path.getEnd());
+            }
+            if (!isConnected(path.getStart()) || !isConnected(path.getEnd())) {
+                union(world, path);
+                if (isConnected(path.getStart())) {
+                    connectedRooms.add(path.getEnd());
+                } else if (isConnected(path.getEnd())) {
+                    connectedRooms.add(path.getStart());
+                }
             }
 
         }

@@ -45,8 +45,8 @@ public class MapGenerator {
 
     public boolean isOverlap(Room room) {
         Position topLeft = room.getTopLeft();
-        Position topRight = new Position(topLeft.getX() + room.getWidth(), topLeft.getY());
-        Position bottomLeft = new Position(topLeft.getX(), topLeft.getY() - room.getHeight());
+        Position topRight = new Position(topLeft.getX() + room.getWidth() - 1, topLeft.getY());
+        Position bottomLeft = new Position(topLeft.getX(), topLeft.getY() - room.getHeight() + 1);
         Position bottomRight = room.getBottomRight();
         for (Room r : rooms) {
             if(xCoordCornerOverlap(topLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
