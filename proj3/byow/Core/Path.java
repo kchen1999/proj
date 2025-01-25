@@ -17,17 +17,7 @@ public class Path implements Comparable<Path> {
         return end;
     }
 
-    public void printPath() {
-        System.out.println("Printing path: ");
-        start.printRoom();
-        end.printRoom();
-        System.out.println("");
-    }
-
-    private void calculateDistance(Room start, Room end) {
-        int x = Math.abs(start.getCentre().getX() - end.getCentre().getX());
-        int y = Math.abs(start.getCentre().getY() - end.getCentre().getY());
-        distance = Math.hypot(x, y);
+    private void orderPath(Room start, Room end) {
         if (start.getTopLeft().getX() < end.getTopLeft().getX()) {
             this.start = start;
             this.end = end;
@@ -41,7 +31,32 @@ public class Path implements Comparable<Path> {
             this.start = end;
             this.end = start;
         }
+    }
 
+    private void calculateDistance(Room start, Room end) {
+        orderPath(start, end);
+        int horizontalDistance = this.end.getTopLeft().getX() - this.start.getBottomRight().getX() + 1;
+        if (this.start.getTopLeft().getX() == this.end.getTopLeft().getX()) {
+            this.distance = this.end.getBottomRight().getY() - this.start.getTopLeft().getY() + 1;
+        } else if (this.start.getTopLeft().getY() < this.end.getTopLeft().getY()) {
+            if (this.end.getTopLeft().getX() <= this.start.getBottomRight().getX()) {
+                this.distance = this.end.getBottomRight().getY() - this.start.getTopLeft().getY() + 1;
+            } else if (this.start.getTopLeft().getY() >= this.end.getBottomRight().getY()) {
+                this.distance = horizontalDistance;
+            } else {
+                this.distance = horizontalDistance + this.end.getBottomRight().getY() - this.start.getTopLeft().getY() + 1;
+            }
+        } else if(this.start.getTopLeft().getY() > this.end.getTopLeft().getY()) {
+            if (this.end.getTopLeft().getX() <= this.start.getBottomRight().getX()) {
+                this.distance = this.start.getBottomRight().getY() - this.end.getTopLeft().getY() + 1;
+            } else if (this.end.getTopLeft().getY() >= this.start.getBottomRight().getY()) {
+                this.distance = horizontalDistance;
+            } else {
+                this.distance = horizontalDistance + this.start.getBottomRight().getY() - this.end.getTopLeft().getY() + 1;
+            }
+        } else {
+            this.distance = horizontalDistance;
+        }
     }
 
     public Path(Room start, Room end) {
