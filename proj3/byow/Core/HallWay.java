@@ -8,7 +8,12 @@ import java.util.HashSet;
 
 public class HallWay {
     private static Set<Room> connectedRooms = new HashSet<>();
+    private static Set<Room> unconnectedRooms = new HashSet<>();
     private static final TETile tile = Tileset.WATER;
+
+    private static boolean unconnected(Room room) {
+        return unconnectedRooms.contains(room);
+    }
 
     private static boolean isConnected(Room room) {
         return connectedRooms.contains(room);
@@ -36,23 +41,31 @@ public class HallWay {
     }
 
     private static void drawHallWay(TETile[][] world, Room start, Room end) {
+        Position startTopRight = new Position(start.getTopLeft().getX() + start.getWidth() - 1, start.getTopLeft().getY());
+        Position endBottomLeft = new Position(end.getTopLeft().getX(), end.getBottomRight().getY());
         if (start.getTopLeft().getX() == end.getTopLeft().getX()) {
             drawVerticalHallWay(world, start.getTopLeft(), end.getBottomRight());
         } else if (start.getTopLeft().getY() == end.getTopLeft().getY()) {
-            drawHorizontalHallWayLtoR(world, new Position(start.getTopLeft().getX() + start.getWidth() - 1, start.getTopLeft().getY()),
-                    end.getTopLeft());
-        }  else if (start.getTopLeft().getY() < end.getTopLeft().getY()) {
-            drawHorizontalHallWayLtoR(world, new Position(start.getTopLeft().getX() + start.getWidth() - 1, start.getTopLeft().getY()),
-                    new Position(end.getTopLeft().getX() + 1, start.getTopLeft().getY()));
-            drawVerticalHallWay(world, new Position(end.getTopLeft().getX(), start.getTopLeft().getY()),
-                    new Position(end.getTopLeft().getX(), end.getBottomRight().getY()));
-        }   else if(start.getTopLeft().getY() > end.getTopLeft().getY()) {
-            drawHorizontalHallWayRtoL(world, new Position(end.getTopLeft().getX(), end.getTopLeft().getY()),
-                    new Position(start.getBottomRight().getX(), end.getTopLeft().getY()));
-            drawVerticalHallWay(world, new Position(start.getBottomRight().getX(), end.getTopLeft().getY()),
-                    start.getBottomRight());
+            drawHorizontalHallWayLtoR(world, startTopRight, end.getTopLeft());
+        } else if (start.getTopLeft().getY() < end.getTopLeft().getY()) {
+            if (end.getBottomRight().getX() <= start.getBottomRight().getX()) {
+                drawVerticalHallWay(world, new Position(end.getBottomRight().getX(), start.getTopLeft().getY()), end.getBottomRight());
+            } else if (startTopRight.getX() >= end.getTopLeft().getX()) {
+                drawVerticalHallWay(world, startTopRight, new Position(startTopRight.getX(), end.getBottomRight().getY()));
+            } else {
+                drawHorizontalHallWayLtoR(world, startTopRight, new Position(end.getTopLeft().getX() + 1, start.getTopLeft().getY()));
+                drawVerticalHallWay(world, new Position(end.getTopLeft().getX(), start.getTopLeft().getY()), endBottomLeft);
+            }
+        } else if(start.getTopLeft().getY() > end.getTopLeft().getY()) {
+            if (end.getBottomRight().getX() <= start.getBottomRight().getX()) {
+                drawVerticalHallWay(world, end.getTopLeft(), new Position(end.getTopLeft().getX(), start.getBottomRight().getY()));
+            } else if (end.getTopLeft().getX() <= start.getBottomRight().getX()) {
+                drawVerticalHallWay(world, end.getTopLeft(), new Position(end.getTopLeft().getX(), start.getBottomRight().getY()));
+            } else {
+                drawHorizontalHallWayRtoL(world, end.getTopLeft(), new Position(start.getBottomRight().getX(), end.getTopLeft().getY()));
+                drawVerticalHallWay(world, new Position(start.getBottomRight().getX(), end.getTopLeft().getY()), start.getBottomRight());
+            }
         }
-
     }
 
     private static void union(TETile[][] world, Path path) {
@@ -61,22 +74,42 @@ public class HallWay {
 
     public static void generate(TETile[][] world, Set<Path> paths, int numOfRooms) {
         for (Path path : paths) {
+            Room start = path.getStart();
+            Room end = path.getEnd();
             if (connectedRooms.size() == numOfRooms) {
                 return;
             }
+            if (isConnected(start) && isConnected(end)) {
+                continue;
+            }
             if (connectedRooms.size() == 0) {
                 union(world, path);
-                connectedRooms.add(path.getStart());
-                connectedRooms.add(path.getEnd());
+                connectedRooms.add(start);
+                connectedRooms.add(end);
+                continue;
             }
-            if (!isConnected(path.getStart()) || !isConnected(path.getEnd())) {
+            if (isConnected(start)) {
                 union(world, path);
-                if (isConnected(path.getStart())) {
-                    connectedRooms.add(path.getEnd());
-                } else if (isConnected(path.getEnd())) {
-                    connectedRooms.add(path.getStart());
+                connectedRooms.add(end);
+            } else if (isConnected(end)) {
+                union(world, path);
+                connectedRooms.add(start);
+            } else {
+                if (unconnected(start) && unconnected(end)) {
+                    continue;
+                } else if (!unconnected(start) && !unconnected(end)) {
+                    union(world, path);
+                    unconnectedRooms.add(start);
+                    unconnectedRooms.add(end);
+                } else if (!unconnected(start)) {
+                    union(world, path);
+                    unconnectedRooms.add(start);
+                } else {
+                    union(world, path);
+                    unconnectedRooms.add(end);
                 }
             }
+
 
         }
 
