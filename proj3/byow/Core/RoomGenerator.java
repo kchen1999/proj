@@ -13,8 +13,8 @@ public class RoomGenerator {
     private static final int ROOM_MAX_HEIGHT = 6;
 
     private static Position randomTopLeftPosition() {
-        int x = mapLeftOffset + random.nextInt(mapWidth - 1) + 1;
-        int y = mapTopOffset + random.nextInt(mapHeight - 1) + 1;
+        int x = mapLeftOffset + random.nextInt(mapWidth - 1);
+        int y = mapTopOffset + random.nextInt(mapHeight - 1);
         return new Position(x, y);
     }
 
@@ -30,7 +30,7 @@ public class RoomGenerator {
         Position topLeft = randomTopLeftPosition();
         int randomWidth, randomHeight;
         if (mapLeftOffset + mapWidth - topLeft.getX() < ROOM_MAX_WIDTH) { //check other bound
-            randomWidth = random.nextInt(mapLeftOffset + mapWidth - topLeft.getX());
+            randomWidth = random.nextInt(mapLeftOffset + mapWidth - topLeft.getX() - 1) + 1;
         } else {
             randomWidth = random.nextInt(ROOM_MAX_WIDTH) + 1;
         }

@@ -18,12 +18,6 @@ public class Room {
         }
     }
 
-    public Position getCentre() {
-        int x = (topLeft.getX() + bottomRight.getX()) / 2;
-        int y = (topLeft.getY() + bottomRight.getY()) / 2;
-        return new Position(x, y);
-    }
-
     public int getWidth() {
         return width;
     }
@@ -36,6 +30,7 @@ public class Room {
         System.out.println("Room's top left is at x:" + topLeft.getX() + " y:" + topLeft.getY() + ".");
         System.out.println("With width " + width + " height " + height);
         System.out.println("Room's bottom right is at x:" + bottomRight.getX() + " y:" + bottomRight.getY() + ".");
+        System.out.println("");
     }
 
     public Position getTopLeft() {
