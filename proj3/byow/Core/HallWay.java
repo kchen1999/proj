@@ -9,7 +9,8 @@ import java.util.HashSet;
 public class HallWay {
     private static Set<Room> connectedRooms = new HashSet<>();
     private static Set<Room> unconnectedRooms = new HashSet<>();
-    private static final TETile tile = Tileset.WATER;
+    private static final TETile tile = Tileset.FLOOR;
+    private static final TETile wall = Tileset.WALL;
 
     private static boolean unconnected(Room room) {
         return unconnectedRooms.contains(room);
@@ -23,20 +24,76 @@ public class HallWay {
         int i = bottom.getX();
         for (int j = bottom.getY() + 1; j < top.getY(); j++) {
             world[i][j] = tile;
+            if (!world[i - 1][j].equals(tile)) {
+                world[i - 1][j] = wall;
+            }
+            if (!world[i + 1][j].equals(tile)) {
+                world[i + 1][j] = wall;
+            }
         }
+        if (!world[i - 1][bottom.getY()].equals(tile)) {
+            world[i - 1][bottom.getY()] = wall;
+        }
+        if (!world[i - 1][top.getY()].equals(tile)) {
+            world[i - 1][top.getY()] = wall;
+        }
+        if (!world[i + 1][bottom.getY()].equals(tile)) {
+            world[i + 1][bottom.getY()] = wall;
+        }
+        if (!world[i + 1][top.getY()].equals(tile)) {
+            world[i + 1][top.getY()] = wall;
+        }
+
     }
 
     private static void drawHorizontalHallWayLtoR(TETile[][] world, Position left, Position right) {
         int j = left.getY();
         for (int i = left.getX() + 1; i < right.getX(); i++) {
             world[i][j] = tile;
+            if (!world[i][j - 1].equals(tile)) {
+                world[i][j - 1] = wall;
+            }
+            if (!world[i][j + 1].equals(tile)) {
+                world[i][j + 1] = wall;
+            }
         }
+        if (!world[left.getX()][j - 1].equals(tile)) {
+            world[left.getX()][j - 1] = wall;
+        }
+        if (!world[right.getX()][j - 1].equals(tile)) {
+            world[right.getX()][j - 1] = wall;
+        }
+        if (!world[left.getX()][j + 1].equals(tile)) {
+            world[left.getX()][j + 1] = wall;
+        }
+        if (!world[right.getX()][j + 1].equals(tile)) {
+            world[right.getX()][j + 1] = wall;
+        }
+
     }
 
     private static void drawHorizontalHallWayRtoL(TETile[][] world, Position right, Position left) {
         int j = right.getY();
         for (int i = right.getX() - 1; i >= left.getX(); i--) {
             world[i][j] = tile;
+            if (!world[i][j - 1].equals(Tileset.FLOOR)) {
+                world[i][j - 1] = wall;
+            }
+            if (!world[i][j + 1].equals(Tileset.FLOOR)) {
+                world[i][j + 1] = wall;
+            }
+        }
+        if (!world[left.getX() - 1][j - 1].equals(Tileset.FLOOR)) {
+            world[left.getX() - 1][j - 1] = wall;
+        }
+        if (!world[right.getX()][j - 1].equals(Tileset.FLOOR)) {
+            world[right.getX()][j - 1] = wall;
+        }
+        if (!world[left.getX() - 1][j + 1].equals(Tileset.FLOOR)) {
+            world[left.getX() - 1][j + 1] = wall;
+        }
+        if (!world[right.getX()][j + 1].equals(Tileset.FLOOR)) {
+            world[right.getX()][j + 1] = wall;
         }
     }
 
