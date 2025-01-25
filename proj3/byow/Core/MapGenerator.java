@@ -112,11 +112,11 @@ public class MapGenerator {
     public int randomNumOfRooms(Random random, int mapWidth, int mapHeight) {
         int n = (mapWidth / ((RoomGenerator.getRoomMaxWidth() + 1) / 2 + 1) *
                 mapHeight / (RoomGenerator.getRoomMaxHeight() + 1) / 2 + 1);
-        return random.nextInt((int) (0.6 * n)) + n;
+        return random.nextInt((int) (0.5 * n)) + n + 1;
     }
 
     public int randomMapWidth(Random random, int mapLeftOffset) {
-        int mapWidth = random.nextInt((int) (0.7 * width)) + (int) (0.3 * width);
+        int mapWidth = random.nextInt((int) (0.65 * width)) + (int) (0.35 * width);
         if (mapWidth + mapLeftOffset > width) {
             mapWidth = width - mapLeftOffset;
         }
@@ -157,7 +157,7 @@ public class MapGenerator {
         ter.initialize(80, 30);
 
         // initialize tiles
-        MapGenerator mg = new MapGenerator(341, 80, 30);
+        MapGenerator mg = new MapGenerator(402, 80, 30);
 
         //Room r1 = new Room(new Position(0, 2), 4, 3);
         //r1.draw(world);
