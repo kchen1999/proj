@@ -5,10 +5,26 @@ import byow.TileEngine.Tileset;
 
 public class Room {
     private static final TETile tile = Tileset.FLOOR;
+    private static final TETile wall = Tileset.WALL;
     private Position topLeft;
     private Position bottomRight;
     private int width;
     private int height;
+
+    private void drawWalls(TETile[][] world) {
+        for (int j = -1; j < height + 1; j++) {
+            world[topLeft.getX() - 1][topLeft.getY() - j] = wall;
+        }
+        for (int j = -1; j < height + 1; j++) {
+            world[topLeft.getX() + width][topLeft.getY() - j] = wall;
+        }
+        for (int i = -1; i < width + 1; i++) {
+            world[topLeft.getX() + i][topLeft.getY() + 1] = wall;
+        }
+        for (int i = -1; i < width + 1; i++) {
+            world[topLeft.getX() + i][topLeft.getY() - height] = wall;
+        }
+    }
 
     public void draw(TETile[][] world) {
         for (int i = 0; i < width; i++) {
@@ -16,6 +32,7 @@ public class Room {
                 world[topLeft.getX() + i][topLeft.getY() - j] = tile;
             }
         }
+        drawWalls(world);
     }
 
     public int getWidth() {
