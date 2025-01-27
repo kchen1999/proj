@@ -14,7 +14,7 @@ import java.util.Random;
 public class MapGenerator {
     private static final List<Room> rooms = new ArrayList<>();
     private static final Set<Path> paths = new TreeSet<>();
-    private static TETile[][] world;
+    private TETile[][] world;
     private static int width;
     private static int height;
 
