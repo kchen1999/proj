@@ -3,6 +3,8 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
+import javax.swing.text.AttributeSet;
+
 public class Engine {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
@@ -14,6 +16,7 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+        return;
     }
 
     /**
@@ -46,7 +49,27 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
 
-        TETile[][] finalWorldFrame = null;
-        return finalWorldFrame;
+        char keypress = Character.toLowerCase(input.charAt(0));
+        if (keypress == 'n') {
+            StringBuilder sb  = new StringBuilder();
+            for (int i = 1; i < input.length(); i++) {
+                if (Character.toLowerCase(input.charAt(i)) == 's') {
+                    sb.append('s');
+                    break;
+                }
+                sb.append(input.charAt(i));
+            }
+            if (sb.charAt(sb.length() - 1) == 's') {
+                sb.deleteCharAt(sb.length() - 1);
+                MapGenerator mg = new MapGenerator(Long.parseLong(sb.toString()), WIDTH, HEIGHT);
+                return mg.getWorld();
+            } else {
+                System.exit(0);
+            }
+
+
+        }
+        return null;
+
     }
 }

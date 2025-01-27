@@ -123,7 +123,11 @@ public class MapGenerator {
         return mapWidth;
     }
 
-    public MapGenerator(int seed, int width, int height) {
+    public TETile[][] getWorld() {
+        return world;
+    }
+
+    public MapGenerator(long seed, int width, int height) {
         Random random = new Random(seed);
         this.width = width;
         this.height = height;
@@ -153,15 +157,6 @@ public class MapGenerator {
     }
 
     public static void main(String[] args) {
-        TERenderer ter = new TERenderer();
-        ter.initialize(80, 30);
-
-        // initialize tiles
-        MapGenerator mg = new MapGenerator(402, 80, 30);
-
-        //Room r1 = new Room(new Position(0, 2), 4, 3);
-        //r1.draw(world);
-        // draws the world to the screen
-        ter.renderFrame(world);
+       return;
     }
 }
