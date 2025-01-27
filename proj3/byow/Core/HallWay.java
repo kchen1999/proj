@@ -130,6 +130,8 @@ public class HallWay {
     }
 
     public static void generate(TETile[][] world, Set<Path> paths, int numOfRooms) {
+        connectedRooms.clear();
+        unconnectedRooms.clear();
         for (Path path : paths) {
             Room start = path.getStart();
             Room end = path.getEnd();

@@ -14,7 +14,7 @@ import java.util.Random;
 public class MapGenerator {
     private static final List<Room> rooms = new ArrayList<>();
     private static final Set<Path> paths = new TreeSet<>();
-    private TETile[][] world;
+    private static TETile[][] world;
     private static int width;
     private static int height;
 
@@ -95,6 +95,8 @@ public class MapGenerator {
                 world[x][y] = Tileset.NOTHING;
             }
         }
+        rooms.clear();
+        paths.clear();
     }
 
     public int randomMapLeftOffset(Random random) {
