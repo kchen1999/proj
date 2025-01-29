@@ -3,7 +3,9 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
-public class Room {
+import java.util.Random;
+
+public class Room implements Comparable<Room> {
     private static final TETile tile = Tileset.FLOOR;
     private static final TETile wall = Tileset.WALL;
     private Position topLeft;
@@ -11,28 +13,34 @@ public class Room {
     private int width;
     private int height;
 
-    private void drawWalls(TETile[][] world) {
+    private void drawWalls(WorldState ws) {
         for (int j = -1; j < height + 1; j++) {
-            world[topLeft.getX() - 1][topLeft.getY() - j] = wall;
+            ws.setTile(topLeft.getX() - 1, topLeft.getY() - j, wall);
         }
         for (int j = -1; j < height + 1; j++) {
-            world[topLeft.getX() + width][topLeft.getY() - j] = wall;
+            ws.setTile(topLeft.getX() + width, topLeft.getY() - j, wall);
         }
         for (int i = -1; i < width + 1; i++) {
-            world[topLeft.getX() + i][topLeft.getY() + 1] = wall;
+            ws.setTile(topLeft.getX() + i, topLeft.getY() + 1, wall);
         }
         for (int i = -1; i < width + 1; i++) {
-            world[topLeft.getX() + i][topLeft.getY() - height] = wall;
+            ws.setTile(topLeft.getX() + i, topLeft.getY() - height, wall);
         }
     }
 
-    public void draw(TETile[][] world) {
+    public Position generateRandomPlayerPosition(Random random) {
+        int i = random.nextInt(width);
+        int j = random.nextInt(height);
+        return new Position(topLeft.getX() + i, topLeft.getY() - j);
+    }
+
+    public void draw(WorldState ws) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                world[topLeft.getX() + i][topLeft.getY() - j] = tile;
+                ws.setTile(topLeft.getX() + i, topLeft.getY() - j, tile);
             }
         }
-        drawWalls(world);
+        drawWalls(ws);
     }
 
     public int getWidth() {
@@ -65,4 +73,11 @@ public class Room {
         this.height = height;
     }
 
+    @Override
+    public int compareTo(Room r) {
+        if (this.topLeft.getX() == r.getTopLeft().getX()) {
+            return r.getTopLeft().getY() - this.topLeft.getY();
+        }
+        return this.topLeft.getX() - r.getTopLeft().getX();
+    }
 }

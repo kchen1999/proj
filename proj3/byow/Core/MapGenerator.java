@@ -4,19 +4,18 @@ import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Random;
 
 
 public class MapGenerator {
-    private static final List<Room> rooms = new ArrayList<>();
+    private static final Set<Room> rooms = new TreeSet<>();
     private static final Set<Path> paths = new TreeSet<>();
-    private static TETile[][] world;
     private static int width;
     private static int height;
+    private static Position playerPosition;
+    private static Random random;
 
     private void addPath(Room room) {
         for (Room r: rooms) {
@@ -89,12 +88,7 @@ public class MapGenerator {
         return false;
     }
 
-    private void initializeWorld() {
-        for (int x = 0; x < width; x += 1) {
-            for (int y = 0; y < height; y += 1) {
-                world[x][y] = Tileset.NOTHING;
-            }
-        }
+    private void resetMap() {
         rooms.clear();
         paths.clear();
     }
@@ -125,37 +119,39 @@ public class MapGenerator {
         return mapWidth;
     }
 
-    public TETile[][] getWorld() {
-        return world;
-    }
-
-    public MapGenerator(long seed, int width, int height) {
-        Random random = new Random(seed);
-        this.width = width;
-        this.height = height;
-        this.world = new TETile[width][height];
-        initializeWorld();
+    public WorldState generate() {
         int mapLeftOffset = randomMapLeftOffset(random);
         int mapTopOffset = randomMapTopOffset(random);
         int mapBottomOffset = randomMapBottomOffset(random);
         int mapWidth = randomMapWidth(random, mapLeftOffset);
         int mapHeight = height - mapTopOffset - mapBottomOffset;
-
+        WorldState ws = new WorldState(width, height);
         RoomGenerator rg = new RoomGenerator(random, mapWidth, mapHeight, mapLeftOffset, mapTopOffset);
         int numOfRooms = randomNumOfRooms(random, mapWidth, mapHeight);
         for (int i = 0; i < numOfRooms; i++) {
             while(true) {
                 Room room = rg.generate();
                 if (!isOverlap(room)) {
-                    room.draw(world);
+                    if (i == 0) {
+                        playerPosition = room.generateRandomPlayerPosition(random);
+                    }
+                    room.draw(ws);
                     addPath(room);
                     rooms.add(room);
                     break;
                 }
             }
         }
-        HallWay.generate(world, paths, numOfRooms);
+        HallWay.generate(ws, paths, numOfRooms);
+        return ws;
+    }
 
+
+    public MapGenerator(long seed, int width, int height) {
+        this.random = new Random(seed);
+        this.width = width;
+        this.height = height;
+        resetMap();
     }
 
     public static void main(String[] args) {
