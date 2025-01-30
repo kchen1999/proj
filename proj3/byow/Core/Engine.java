@@ -50,10 +50,10 @@ public class Engine {
         InputSource inputSource;
         if (inputType == KEYBOARD) {
             inputSource = new KeyboardInputSource();
-            initializeGame();
         } else {
             inputSource = new StringInputDevice(input);
         }
+        initializeGame();
         StringBuilder seedBuilder = new StringBuilder();
         boolean isSeedMode = false;
         boolean isLoaded = false;
@@ -81,7 +81,9 @@ public class Engine {
                 }
             } else if (c == 'Q' && prevChar == ':') {
                 GameSaver.save(seed, user.getPosition());
-                break;
+                if (inputType == KEYBOARD) {
+                    System.exit(0);
+                }
             } else if (c == 'L') {
                 loadWorldState();
                 isLoaded = true;

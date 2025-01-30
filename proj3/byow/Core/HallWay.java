@@ -50,10 +50,10 @@ public class HallWay {
         for (int i = left.getX() + 1; i < right.getX(); i++) {
             ws.setTile(i, j, TILE);
             if (!ws.isTile(i + 1, j - 1, TILE)) {
-                ws.setTile(i, j - 1, WALL);
+                ws.setTile(i + 1, j - 1, WALL);
             }
             if (!ws.isTile(i + 1, j + 1, TILE)) {
-                ws.setTile(i, j + 1, WALL);
+                ws.setTile(i + 1, j + 1, WALL);
             }
         }
         if (!ws.isTile(left.getX(), j - 1, TILE)) {
