@@ -8,6 +8,21 @@ public class Display {
     private int width;
     private int height;
     private StringBuilder seed;
+    private static final int LEFT_OFFSET = 10;
+
+    public void showHeadsUpDisplay(WorldState ws, int hudTopOffset) {
+        Font font = new Font("Monaco", Font.BOLD, 16);
+        StdDraw.setFont(font);
+        StdDraw.setPenColor(Color.WHITE);
+        int mouseX = (int) StdDraw.mouseX();
+        int mouseY = (int) StdDraw.mouseY();
+        if ((mouseX < width && mouseX > 0 && mouseY < (height - Engine.getHudTopOffset() / 2) && mouseY > 0)) {
+            String tileDescription = ws.getTile((int) (StdDraw.mouseX()),
+                    (int) (StdDraw.mouseY() - (hudTopOffset / 2)));
+            StdDraw.textLeft(LEFT_OFFSET, height - 1, "Tile: " + tileDescription);
+        }
+        StdDraw.show();
+    }
 
     public void loadEnterRandomSeed(StringBuilder seed) {
         this.seed = seed;
@@ -33,7 +48,7 @@ public class Display {
 
     public Display(int width, int height) {
         this.width = width;
-        this.height = height;
+        this.height = height + Engine.getHudTopOffset();
         seed = new StringBuilder();
     }
 }

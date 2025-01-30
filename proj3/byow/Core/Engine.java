@@ -2,6 +2,7 @@ package byow.Core;
 
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
+import edu.princeton.cs.introcs.StdDraw;
 
 
 public class Engine {
@@ -9,14 +10,20 @@ public class Engine {
     public static final int HEIGHT = 30;
     private static final int KEYBOARD = 0;
     private static final int STRING = 1;
+    private static final int HUD_TOP_OFFSET = 10;
     private String seed;
     private WorldState ws;
     private Player user;
     private TERenderer ter;
     private Display display;
 
+    public static int getHudTopOffset() {
+        return HUD_TOP_OFFSET;
+    }
+
     private void refreshMap() {
         ter.renderFrame(ws.terrainGrid());
+        display.showHeadsUpDisplay(ws, HUD_TOP_OFFSET);
     }
 
     private void generateMap() {
@@ -28,7 +35,6 @@ public class Engine {
 
     private void playGame(char c) {
         user.move(ws, c);
-        refreshMap();
     }
 
     private void loadWorldState() {
@@ -40,8 +46,8 @@ public class Engine {
 
     private void initializeGame() {
         ter = new TERenderer();
-        ter.initialize(WIDTH, HEIGHT + 10, 0, 5);
-        display = new Display(WIDTH, HEIGHT + 10);
+        ter.initialize(WIDTH, HEIGHT + HUD_TOP_OFFSET, 0, HUD_TOP_OFFSET / 2);
+        display = new Display(WIDTH, HEIGHT);
         display.loadMainMenu();
     }
 
@@ -67,11 +73,11 @@ public class Engine {
                     display.loadEnterRandomSeed(seedBuilder);
                 }
                 if (c == 'S') {
-                    isSeedMode = false;
                     seed = seedBuilder.toString();
                     generateMap();
                     isLoaded = true;
                     GameSaver.resetSavedState();
+                    break;
                 }
             } else if (c == 'N') {
                 if (!isLoaded) {
@@ -87,12 +93,25 @@ public class Engine {
             } else if (c == 'L') {
                 loadWorldState();
                 isLoaded = true;
-            } else {
-                if (isLoaded) {
-                    playGame(c);
-                }
+                break;
             }
             prevChar = c;
+        }
+        while (isLoaded) {
+            refreshMap();
+            if (inputSource.possibleNextInput()) {
+                char c = inputSource.getNextKey();
+                if (c == 'Q' && prevChar == ':') {
+                    GameSaver.save(seed, user.getPosition());
+                    if (inputType == KEYBOARD) {
+                        System.exit(0);
+                    }
+                } else {
+                    playGame(c);
+                }
+                prevChar = c;
+            }
+            StdDraw.pause(50);
         }
     }
 
