@@ -1,22 +1,86 @@
 package byow.Core;
 
-import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
-import javax.swing.text.AttributeSet;
 
 public class Engine {
-    TERenderer ter = new TERenderer();
-    /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
+    private static final int KEYBOARD = 0;
+    private static final int STRING = 1;
+    private String seed;
+    private WorldState ws;
+    private Player user;
+
+    private void generateMap() {
+        MapGenerator mg = new MapGenerator(Long.parseLong(seed), WIDTH, HEIGHT);
+        ws = mg.generate();
+        user = new Player(ws, mg.getPlayerPosition());
+    }
+
+    private void playGame(char c) {
+        user.move(ws, c);
+    }
+
+    private void loadWorldState() {
+        seed = GameSaver.readSeed();
+        Position savedPlayerPosition = GameSaver.readPlayerPosition();
+        generateMap();
+        user.updatePosition(ws, savedPlayerPosition);
+    }
+
+
+    private void interactWithInput(int inputType, String input) {
+        InputSource inputSource;
+        if (inputType == KEYBOARD) {
+            inputSource = new KeyboardInputSource();
+        } else {
+            inputSource = new StringInputDevice(input);
+        }
+        StringBuilder seedBuilder = new StringBuilder();
+        boolean isSeedMode = false;
+        boolean isLoaded = false;
+        char prevChar = 0;
+
+        while (inputSource.possibleNextInput()) {
+            char c = inputSource.getNextKey();
+            if (isSeedMode) {
+                if (Character.isDigit(c)) {
+                    seedBuilder.append(c);
+                }
+                if (c == 'S') {
+                    isSeedMode = false;
+                    seed = seedBuilder.toString();
+                    generateMap();
+                    isLoaded = true;
+                    GameSaver.resetSavedState();
+                }
+            } else if (c == 'N') {
+                if (!isLoaded) {
+                    isSeedMode = true;
+                    seedBuilder.setLength(0);
+                }
+            } else if (c == 'Q' && prevChar == ':') {
+                GameSaver.save(seed, user.getPosition());
+                break;
+            } else if (c == 'L') {
+                loadWorldState();
+                isLoaded = true;
+            } else {
+                if (isLoaded) {
+                    playGame(c);
+                }
+            }
+            prevChar = c;
+        }
+    }
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
      */
-    public void interactWithKeyboard() {
-        return;
+    public void interactWithKeyboard()  {
+        interactWithInput(KEYBOARD, null);
     }
 
     /**
@@ -48,28 +112,8 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-
-        char keypress = Character.toLowerCase(input.charAt(0));
-        if (keypress == 'n') {
-            StringBuilder sb  = new StringBuilder();
-            for (int i = 1; i < input.length(); i++) {
-                if (Character.toLowerCase(input.charAt(i)) == 's') {
-                    sb.append('s');
-                    break;
-                }
-                sb.append(input.charAt(i));
-            }
-            if (sb.charAt(sb.length() - 1) == 's') {
-                sb.deleteCharAt(sb.length() - 1);
-                MapGenerator mg = new MapGenerator(Long.parseLong(sb.toString()), WIDTH, HEIGHT);
-                return mg.getWorld();
-            } else {
-                System.exit(0);
-            }
-
-
-        }
-        return null;
-
+        interactWithInput(STRING, input);
+        return ws.terrainGrid();
     }
 }
+
