@@ -1,9 +1,5 @@
 package byow.Core;
 
-import byow.TileEngine.TERenderer;
-import byow.TileEngine.TETile;
-import byow.TileEngine.Tileset;
-
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Random;
@@ -17,10 +13,13 @@ public class MapGenerator {
     private static Position playerPosition;
     private static Random random;
 
+    public Position getPlayerPosition() {
+        return playerPosition;
+    }
+
     private void addPath(Room room) {
         for (Room r: rooms) {
             paths.add(new Path(room, r));
-
         }
     }
 
@@ -93,25 +92,25 @@ public class MapGenerator {
         paths.clear();
     }
 
-    public int randomMapLeftOffset(Random random) {
+    public int randomMapLeftOffset() {
         return random.nextInt((int) (0.25 * width) - 1) + 1;
     }
 
-    public int randomMapTopOffset(Random random) {
+    public int randomMapTopOffset() {
         return random.nextInt((int) (0.2 * height) - 1) + 1;
     }
 
-    public int randomMapBottomOffset(Random random) {
+    public int randomMapBottomOffset() {
         return random.nextInt((int) (0.1 * height) - 1) + 1;
     }
 
-    public int randomNumOfRooms(Random random, int mapWidth, int mapHeight) {
+    public int randomNumOfRooms(int mapWidth, int mapHeight) {
         int n = (mapWidth / ((RoomGenerator.getRoomMaxWidth() + 1) / 2 + 1) *
                 mapHeight / (RoomGenerator.getRoomMaxHeight() + 1) / 2 + 1);
         return random.nextInt((int) (0.5 * n)) + n + 1;
     }
 
-    public int randomMapWidth(Random random, int mapLeftOffset) {
+    public int randomMapWidth(int mapLeftOffset) {
         int mapWidth = random.nextInt((int) (0.65 * width)) + (int) (0.35 * width);
         if (mapWidth + mapLeftOffset > width) {
             mapWidth = width - mapLeftOffset;
@@ -120,14 +119,14 @@ public class MapGenerator {
     }
 
     public WorldState generate() {
-        int mapLeftOffset = randomMapLeftOffset(random);
-        int mapTopOffset = randomMapTopOffset(random);
-        int mapBottomOffset = randomMapBottomOffset(random);
-        int mapWidth = randomMapWidth(random, mapLeftOffset);
+        int mapLeftOffset = randomMapLeftOffset();
+        int mapTopOffset = randomMapTopOffset();
+        int mapBottomOffset = randomMapBottomOffset();
+        int mapWidth = randomMapWidth(mapLeftOffset);
         int mapHeight = height - mapTopOffset - mapBottomOffset;
         WorldState ws = new WorldState(width, height);
         RoomGenerator rg = new RoomGenerator(random, mapWidth, mapHeight, mapLeftOffset, mapTopOffset);
-        int numOfRooms = randomNumOfRooms(random, mapWidth, mapHeight);
+        int numOfRooms = randomNumOfRooms(mapWidth, mapHeight);
         for (int i = 0; i < numOfRooms; i++) {
             while(true) {
                 Room room = rg.generate();
@@ -146,15 +145,10 @@ public class MapGenerator {
         return ws;
     }
 
-
     public MapGenerator(long seed, int width, int height) {
         this.random = new Random(seed);
         this.width = width;
         this.height = height;
         resetMap();
-    }
-
-    public static void main(String[] args) {
-       return;
     }
 }

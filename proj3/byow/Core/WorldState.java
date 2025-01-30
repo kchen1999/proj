@@ -14,7 +14,11 @@ public class WorldState {
         return world[x][y].equals(tile);
     }
 
-    public static TETile[][] terrainGrid() {
+    public static boolean isWall(int x, int y) {
+        return world[x][y].equals(Tileset.WALL);
+    }
+
+    public TETile[][] terrainGrid() {
         return world;
     }
 
