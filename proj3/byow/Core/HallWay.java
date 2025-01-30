@@ -112,7 +112,7 @@ public class HallWay {
                 drawHorizontalHallWayLtoR(ws, startTopRight, new Position(end.getTopLeft().getX() + 1, start.getTopLeft().getY()));
                 drawVerticalHallWay(ws, new Position(end.getTopLeft().getX(), start.getTopLeft().getY()), endBottomLeft);
             }
-        } else if(start.getTopLeft().getY() > end.getTopLeft().getY()) {
+        } else if (start.getTopLeft().getY() > end.getTopLeft().getY()) {
             if (end.getBottomRight().getX() <= start.getBottomRight().getX()) {
                 drawVerticalHallWay(ws, end.getTopLeft(), new Position(end.getTopLeft().getX(), start.getBottomRight().getY()));
             } else if (end.getTopLeft().getX() <= start.getBottomRight().getX()) {

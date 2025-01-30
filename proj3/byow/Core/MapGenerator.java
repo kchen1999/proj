@@ -105,8 +105,8 @@ public class MapGenerator {
     }
 
     public int randomNumOfRooms(int mapWidth, int mapHeight) {
-        int n = (mapWidth / ((RoomGenerator.getRoomMaxWidth() + 1) / 2 + 1) *
-                mapHeight / (RoomGenerator.getRoomMaxHeight() + 1) / 2 + 1);
+        int n = (mapWidth / ((RoomGenerator.getRoomMaxWidth() + 1) / 2 + 1)
+                * mapHeight / (RoomGenerator.getRoomMaxHeight() + 1) / 2 + 1);
         return random.nextInt((int) (0.5 * n)) + n + 1;
     }
 

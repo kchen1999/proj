@@ -1,5 +1,6 @@
 package byow.Core;
 
+import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
 
@@ -11,6 +12,8 @@ public class Engine {
     private String seed;
     private WorldState ws;
     private Player user;
+    private TERenderer ter;
+    private Display display;
 
     private void generateMap() {
         MapGenerator mg = new MapGenerator(Long.parseLong(seed), WIDTH, HEIGHT);
@@ -29,11 +32,19 @@ public class Engine {
         user.updatePosition(ws, savedPlayerPosition);
     }
 
+    private void initializeGame() {
+        ter = new TERenderer();
+        ter.initialize(WIDTH, HEIGHT + 10, 0, 5);
+        display = new Display(WIDTH, HEIGHT + 10);
+        display.loadMainMenu();
+    }
 
-    private void interactWithInput(int inputType, String input) {
+
+    private void startGame(int inputType, String input) {
         InputSource inputSource;
         if (inputType == KEYBOARD) {
             inputSource = new KeyboardInputSource();
+            initializeGame();
         } else {
             inputSource = new StringInputDevice(input);
         }
@@ -47,6 +58,7 @@ public class Engine {
             if (isSeedMode) {
                 if (Character.isDigit(c)) {
                     seedBuilder.append(c);
+                    display.loadEnterRandomSeed(seedBuilder);
                 }
                 if (c == 'S') {
                     isSeedMode = false;
@@ -59,6 +71,7 @@ public class Engine {
                 if (!isLoaded) {
                     isSeedMode = true;
                     seedBuilder.setLength(0);
+                    display.loadEnterRandomSeed(seedBuilder);
                 }
             } else if (c == 'Q' && prevChar == ':') {
                 GameSaver.save(seed, user.getPosition());
@@ -80,7 +93,7 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard()  {
-        interactWithInput(KEYBOARD, null);
+        startGame(KEYBOARD, null);
     }
 
     /**
@@ -112,7 +125,7 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-        interactWithInput(STRING, input);
+        startGame(STRING, input);
         return ws.terrainGrid();
     }
 }

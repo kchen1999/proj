@@ -50,5 +50,4 @@ public class RoomGenerator {
         this.mapLeftOffset = mapLeftOffset;
         this.mapTopOffset = mapTopOffset;
     }
-
 }
