@@ -6,8 +6,8 @@ import java.util.Random;
 
 
 public class MapGenerator {
-    private static final Set<Room> rooms = new TreeSet<>();
-    private static final Set<Path> paths = new TreeSet<>();
+    private static final Set<Room> ROOMS = new TreeSet<>();
+    private static final Set<Path> PATHS = new TreeSet<>();
     private static int width;
     private static int height;
     private static Position playerPosition;
@@ -18,8 +18,8 @@ public class MapGenerator {
     }
 
     private void addPath(Room room) {
-        for (Room r: rooms) {
-            paths.add(new Path(room, r));
+        for (Room r: ROOMS) {
+            PATHS.add(new Path(room, r));
         }
     }
 
@@ -46,40 +46,40 @@ public class MapGenerator {
         Position topRight = new Position(topLeft.getX() + room.getWidth() - 1, topLeft.getY());
         Position bottomLeft = new Position(topLeft.getX(), topLeft.getY() - room.getHeight() + 1);
         Position bottomRight = room.getBottomRight();
-        for (Room r : rooms) {
-            if(xCoordCornerOverlap(topLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+        for (Room r : ROOMS) {
+            if (xCoordCornerOverlap(topLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
                 && yCoordCornerOverlap(topLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordCornerOverlap(topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+            if (xCoordCornerOverlap(topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
                     && yCoordCornerOverlap(topRight.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordCornerOverlap(bottomLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+            if (xCoordCornerOverlap(bottomLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
                     && yCoordCornerOverlap(bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordCornerOverlap(bottomRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+            if (xCoordCornerOverlap(bottomRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
                     && yCoordCornerOverlap(bottomRight.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordSideOverlap(topLeft.getX(), topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+            if (xCoordSideOverlap(topLeft.getX(), topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
                     && yCoordCornerOverlap(topLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordSideOverlap(bottomLeft.getX(), bottomRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+            if (xCoordSideOverlap(bottomLeft.getX(), bottomRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
                     && yCoordCornerOverlap(bottomRight.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())
+            if (yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())
                     && xCoordCornerOverlap(topLeft.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())) {
                 return true;
             }
-            if(yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())
+            if (yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())
                     && xCoordCornerOverlap(bottomRight.getX(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
-            if(xCoordSideOverlap(topLeft.getX(), topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
+            if (xCoordSideOverlap(topLeft.getX(), topRight.getX(), r.getTopLeft().getX(), r.getBottomRight().getX())
                     && yCoordSideOverlap(topLeft.getY(), bottomLeft.getY(), r.getTopLeft().getY(), r.getBottomRight().getY())) {
                 return true;
             }
@@ -88,8 +88,8 @@ public class MapGenerator {
     }
 
     private void resetMap() {
-        rooms.clear();
-        paths.clear();
+        ROOMS.clear();
+        PATHS.clear();
     }
 
     public int randomMapLeftOffset() {
@@ -128,7 +128,7 @@ public class MapGenerator {
         RoomGenerator rg = new RoomGenerator(random, mapWidth, mapHeight, mapLeftOffset, mapTopOffset);
         int numOfRooms = randomNumOfRooms(mapWidth, mapHeight);
         for (int i = 0; i < numOfRooms; i++) {
-            while(true) {
+            while (true) {
                 Room room = rg.generate();
                 if (!isOverlap(room)) {
                     if (i == 0) {
@@ -136,12 +136,12 @@ public class MapGenerator {
                     }
                     room.draw(ws);
                     addPath(room);
-                    rooms.add(room);
+                    ROOMS.add(room);
                     break;
                 }
             }
         }
-        HallWay.generate(ws, paths, numOfRooms);
+        HallWay.generate(ws, PATHS, numOfRooms);
         return ws;
     }
 

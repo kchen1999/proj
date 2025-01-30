@@ -20,7 +20,7 @@ public class GameSaver {
         }
     }
 
-    public static void save (String seed, Position p) {
+    public static void save(String seed, Position p) {
         File seedFile = new File("seed.txt");
         List<String> lines = Arrays.asList(seed);
         resetSavedState();
@@ -41,7 +41,7 @@ public class GameSaver {
 
     }
 
-    public static String readSeed () {
+    public static String readSeed() {
         File seedFile = new File("seed.txt");
         if (!seedFile.exists()) {
             System.exit(0);

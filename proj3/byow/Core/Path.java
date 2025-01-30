@@ -46,7 +46,7 @@ public class Path implements Comparable<Path> {
             } else {
                 this.distance = horizontalDistance + this.end.getBottomRight().getY() - this.start.getTopLeft().getY() + 1;
             }
-        } else if(this.start.getTopLeft().getY() > this.end.getTopLeft().getY()) {
+        } else if (this.start.getTopLeft().getY() > this.end.getTopLeft().getY()) {
             if (this.end.getTopLeft().getX() <= this.start.getBottomRight().getX()) {
                 this.distance = this.start.getBottomRight().getY() - this.end.getTopLeft().getY() + 1;
             } else if (this.end.getTopLeft().getY() >= this.start.getBottomRight().getY()) {
@@ -66,7 +66,7 @@ public class Path implements Comparable<Path> {
     @Override
     public int compareTo(Path p) {
         if (this.distance < p.getDistance()) {
-            return - 1;
+            return -1;
         } else if (this.distance >= p.getDistance()) {
             return 1;
         }

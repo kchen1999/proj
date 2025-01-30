@@ -10,8 +10,8 @@ import java.util.HashSet;
 public class HallWay {
     private static Set<Room> connectedRooms = new HashSet<>();
     private static Set<Room> unconnectedRooms = new HashSet<>();
-    private static final TETile tile = Tileset.FLOOR;
-    private static final TETile wall = Tileset.WALL;
+    private static final TETile TILE = Tileset.FLOOR;
+    private static final TETile WALL = Tileset.WALL;
     private static boolean unconnected(Room room) {
         return unconnectedRooms.contains(room);
     }
@@ -22,25 +22,25 @@ public class HallWay {
     private static void drawVerticalHallWay(WorldState ws, Position bottom, Position top) {
         int i = bottom.getX();
         for (int j = bottom.getY() + 1; j < top.getY(); j++) {
-            ws.setTile(i, j, tile);
-            if (!ws.isTile(i - 1, j, tile)) {
-                ws.setTile(i - 1, j, wall);
+            ws.setTile(i, j, TILE);
+            if (!ws.isTile(i - 1, j, TILE)) {
+                ws.setTile(i - 1, j, WALL);
             }
-            if (!ws.isTile(i + 1, j, tile)) {
-                ws.setTile(i + 1, j, wall);
+            if (!ws.isTile(i + 1, j, TILE)) {
+                ws.setTile(i + 1, j, WALL);
             }
         }
-        if (!ws.isTile(i - 1, bottom.getY(), tile)) {
-            ws.setTile(i - 1, bottom.getY(), wall);
+        if (!ws.isTile(i - 1, bottom.getY(), TILE)) {
+            ws.setTile(i - 1, bottom.getY(), WALL);
         }
-        if (!ws.isTile(i - 1, top.getY(), tile)) {
-            ws.setTile(i - 1, top.getY(), wall);
+        if (!ws.isTile(i - 1, top.getY(), TILE)) {
+            ws.setTile(i - 1, top.getY(), WALL);
         }
-        if (!ws.isTile(i + 1, bottom.getY(), tile)) {
-            ws.setTile(i + 1, bottom.getY(), wall);
+        if (!ws.isTile(i + 1, bottom.getY(), TILE)) {
+            ws.setTile(i + 1, bottom.getY(), WALL);
         }
-        if (!ws.isTile(i + 1, top.getY(), tile)) {
-            ws.setTile(i + 1, top.getY(), wall);
+        if (!ws.isTile(i + 1, top.getY(), TILE)) {
+            ws.setTile(i + 1, top.getY(), WALL);
         }
 
     }
@@ -48,25 +48,25 @@ public class HallWay {
     private static void drawHorizontalHallWayLtoR(WorldState ws, Position left, Position right) {
         int j = left.getY();
         for (int i = left.getX() + 1; i < right.getX(); i++) {
-            ws.setTile(i, j, tile);
-            if (!ws.isTile(i + 1, j - 1, tile)) {
-                ws.setTile(i, j - 1, wall);
+            ws.setTile(i, j, TILE);
+            if (!ws.isTile(i + 1, j - 1, TILE)) {
+                ws.setTile(i, j - 1, WALL);
             }
-            if (!ws.isTile(i + 1, j + 1, tile)) {
-                ws.setTile(i, j + 1, wall);
+            if (!ws.isTile(i + 1, j + 1, TILE)) {
+                ws.setTile(i, j + 1, WALL);
             }
         }
-        if (!ws.isTile(left.getX(), j - 1, tile)) {
-            ws.setTile(left.getX(), j - 1, wall);
+        if (!ws.isTile(left.getX(), j - 1, TILE)) {
+            ws.setTile(left.getX(), j - 1, WALL);
         }
-        if (!ws.isTile(right.getX(), j - 1, tile)) {
-            ws.setTile(right.getX(), j - 1, wall);
+        if (!ws.isTile(right.getX(), j - 1, TILE)) {
+            ws.setTile(right.getX(), j - 1, WALL);
         }
-        if (!ws.isTile(left.getX(), j + 1, tile)) {
-            ws.setTile(left.getX(), j + 1, wall);
+        if (!ws.isTile(left.getX(), j + 1, TILE)) {
+            ws.setTile(left.getX(), j + 1, WALL);
         }
-        if (!ws.isTile(right.getX(), j + 1, tile)) {
-            ws.setTile(right.getX(), j + 1, wall);
+        if (!ws.isTile(right.getX(), j + 1, TILE)) {
+            ws.setTile(right.getX(), j + 1, WALL);
         }
 
     }
@@ -74,25 +74,25 @@ public class HallWay {
     private static void drawHorizontalHallWayRtoL(WorldState ws, Position right, Position left) {
         int j = right.getY();
         for (int i = right.getX() - 1; i >= left.getX(); i--) {
-            ws.setTile(i, j, tile);
-            if (!ws.isTile(i, j - 1, tile)) {
-                ws.setTile(i, j - 1, wall);
+            ws.setTile(i, j, TILE);
+            if (!ws.isTile(i, j - 1, TILE)) {
+                ws.setTile(i, j - 1, WALL);
             }
-            if (!ws.isTile(i, j + 1, tile)) {
-                ws.setTile(i, j + 1, wall);
+            if (!ws.isTile(i, j + 1, TILE)) {
+                ws.setTile(i, j + 1, WALL);
             }
         }
-        if (!ws.isTile(left.getX() - 1, j - 1, tile)) {
-            ws.setTile(left.getX() - 1, j - 1, wall);
+        if (!ws.isTile(left.getX() - 1, j - 1, TILE)) {
+            ws.setTile(left.getX() - 1, j - 1, WALL);
         }
-        if (!ws.isTile(right.getX(), j - 1, tile)) {
-            ws.setTile(right.getX(), j - 1, wall);
+        if (!ws.isTile(right.getX(), j - 1, TILE)) {
+            ws.setTile(right.getX(), j - 1, WALL);
         }
-        if (!ws.isTile(left.getX() - 1, j + 1, tile)) {
-            ws.setTile(left.getX() - 1, j + 1, wall);
+        if (!ws.isTile(left.getX() - 1, j + 1, TILE)) {
+            ws.setTile(left.getX() - 1, j + 1, WALL);
         }
-        if (!ws.isTile(right.getX(), j + 1, tile)) {
-            ws.setTile(right.getX(), j + 1, wall);
+        if (!ws.isTile(right.getX(), j + 1, TILE)) {
+            ws.setTile(right.getX(), j + 1, WALL);
         }
     }
 

@@ -6,8 +6,8 @@ import byow.TileEngine.Tileset;
 import java.util.Random;
 
 public class Room implements Comparable<Room> {
-    private static final TETile tile = Tileset.FLOOR;
-    private static final TETile wall = Tileset.WALL;
+    private static final TETile TILE = Tileset.FLOOR;
+    private static final TETile WALL = Tileset.WALL;
     private Position topLeft;
     private Position bottomRight;
     private int width;
@@ -15,16 +15,16 @@ public class Room implements Comparable<Room> {
 
     private void drawWalls(WorldState ws) {
         for (int j = -1; j < height + 1; j++) {
-            ws.setTile(topLeft.getX() - 1, topLeft.getY() - j, wall);
+            ws.setTile(topLeft.getX() - 1, topLeft.getY() - j, WALL);
         }
         for (int j = -1; j < height + 1; j++) {
-            ws.setTile(topLeft.getX() + width, topLeft.getY() - j, wall);
+            ws.setTile(topLeft.getX() + width, topLeft.getY() - j, WALL);
         }
         for (int i = -1; i < width + 1; i++) {
-            ws.setTile(topLeft.getX() + i, topLeft.getY() + 1, wall);
+            ws.setTile(topLeft.getX() + i, topLeft.getY() + 1, WALL);
         }
         for (int i = -1; i < width + 1; i++) {
-            ws.setTile(topLeft.getX() + i, topLeft.getY() - height, wall);
+            ws.setTile(topLeft.getX() + i, topLeft.getY() - height, WALL);
         }
     }
 
@@ -37,7 +37,7 @@ public class Room implements Comparable<Room> {
     public void draw(WorldState ws) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                ws.setTile(topLeft.getX() + i, topLeft.getY() - j, tile);
+                ws.setTile(topLeft.getX() + i, topLeft.getY() - j, TILE);
             }
         }
         drawWalls(ws);
