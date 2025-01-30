@@ -15,14 +15,20 @@ public class Engine {
     private TERenderer ter;
     private Display display;
 
+    private void refreshMap() {
+        ter.renderFrame(ws.terrainGrid());
+    }
+
     private void generateMap() {
         MapGenerator mg = new MapGenerator(Long.parseLong(seed), WIDTH, HEIGHT);
         ws = mg.generate();
         user = new Player(ws, mg.getPlayerPosition());
+        ter.renderFrame(ws.terrainGrid());
     }
 
     private void playGame(char c) {
         user.move(ws, c);
+        refreshMap();
     }
 
     private void loadWorldState() {

@@ -67,6 +67,4 @@ public class GameSaver {
         }
         return new Position(x, y);
     }
-
-
 }

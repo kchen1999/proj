@@ -12,7 +12,7 @@ public class Display {
     public void loadEnterRandomSeed(StringBuilder seed) {
         this.seed = seed;
         StdDraw.clear(Color.BLACK);
-        StdDraw.text(width / 2, height / 2, "Enter random seed: ");
+        StdDraw.text(width / 2, height / 2, "Enter random seed (Press S at end to confirm): ");
         StdDraw.text(width / 2, height / 2 - 3.2, seed.toString());
         StdDraw.show();
     }
