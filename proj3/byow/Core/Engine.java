@@ -16,19 +16,25 @@ public class Engine {
     private Player user;
     private TERenderer ter;
     private Display display;
+    private boolean lineOfSight = false;
 
     public static int getHudTopOffset() {
         return HUD_TOP_OFFSET;
     }
 
     private void refreshMap() {
-        ter.renderFrame(ws.terrainGrid());
+        if (lineOfSight) {
+            ter.renderFrame(ws.playerLineOfSight(user));
+        } else {
+            ter.renderFrame(ws.terrainGrid());
+        }
         display.showHeadsUpDisplay(ws, HUD_TOP_OFFSET);
     }
 
     private void generateMap() {
         MapGenerator mg = new MapGenerator(Long.parseLong(seed), WIDTH, HEIGHT);
         ws = mg.generate();
+        ws.setWorldTiles();
         user = new Player(ws, mg.getPlayerPosition());
         ter.renderFrame(ws.terrainGrid());
     }
@@ -109,6 +115,9 @@ public class Engine {
                         System.exit(0);
                     }
                 } else {
+                    if (c == 'X') {
+                        lineOfSight = !lineOfSight;
+                    }
                     playGame(c);
                 }
                 prevChar = c;
