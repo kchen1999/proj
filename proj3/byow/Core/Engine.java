@@ -99,6 +99,8 @@ public class Engine {
         }
         while (isLoaded) {
             refreshMap();
+            StdDraw.pause(50);
+
             if (inputSource.possibleNextInput()) {
                 char c = inputSource.getNextKey();
                 if (c == 'Q' && prevChar == ':') {
@@ -111,7 +113,6 @@ public class Engine {
                 }
                 prevChar = c;
             }
-            StdDraw.pause(50);
         }
     }
 

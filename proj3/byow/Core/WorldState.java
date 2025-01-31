@@ -5,8 +5,6 @@ import byow.TileEngine.Tileset;
 
 public class WorldState {
     private static TETile[][] world;
-    private int leftOffset;
-    private int topOffset;
 
     public static void setTile(int x, int y, TETile tile) {
         world[x][y] = tile;
@@ -18,14 +16,6 @@ public class WorldState {
 
     public static boolean isWall(int x, int y) {
         return world[x][y].equals(Tileset.WALL);
-    }
-
-    public int getLeftOffset() {
-        return leftOffset;
-    }
-
-    public int getTopOffset() {
-        return topOffset;
     }
 
     public static String getTile(int x, int y) {

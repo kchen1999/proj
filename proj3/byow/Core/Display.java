@@ -7,7 +7,6 @@ import java.awt.*;
 public class Display {
     private int width;
     private int height;
-    private StringBuilder seed;
     private static final int LEFT_OFFSET = 10;
 
     public void showHeadsUpDisplay(WorldState ws, int hudTopOffset) {
@@ -25,7 +24,6 @@ public class Display {
     }
 
     public void loadEnterRandomSeed(StringBuilder seed) {
-        this.seed = seed;
         StdDraw.clear(Color.BLACK);
         StdDraw.text(width / 2, height / 2, "Enter random seed (Press S at end to confirm): ");
         StdDraw.text(width / 2, height / 2 - 3.2, seed.toString());
@@ -49,6 +47,5 @@ public class Display {
     public Display(int width, int height) {
         this.width = width;
         this.height = height + Engine.getHudTopOffset();
-        seed = new StringBuilder();
     }
 }
