@@ -8,10 +8,36 @@ import java.util.Random;
 public class Room implements Comparable<Room> {
     private static final TETile TILE = Tileset.FLOOR;
     private static final TETile WALL = Tileset.WALL;
+    private static final TETile LIGHT = Tileset.LIGHT;
     private Position topLeft;
     private Position bottomRight;
+    private Position lightSource;
     private int width;
     private int height;
+    private boolean isLightSource = false;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public Position getTopLeft() {
+        return topLeft;
+    }
+
+    public Position getBottomRight() {
+        return bottomRight;
+    }
+
+    public void printRoom() {
+        System.out.println("Room's top left is at x:" + topLeft.getX() + " y:" + topLeft.getY() + ".");
+        System.out.println("With width " + width + " height " + height);
+        System.out.println("Room's bottom right is at x:" + bottomRight.getX() + " y:" + bottomRight.getY() + ".");
+        System.out.println("");
+    }
 
     private void drawWalls(WorldState ws) {
         for (int j = -1; j < height + 1; j++) {
@@ -31,7 +57,16 @@ public class Room implements Comparable<Room> {
     public Position generateRandomPlayerPosition(Random random) {
         int i = random.nextInt(width);
         int j = random.nextInt(height);
-        return new Position(topLeft.getX() + i, topLeft.getY() - j);
+        Position p = new Position(topLeft.getX() + i, topLeft.getY() - j);
+        if (isLightSource) {
+            if (p.equals(lightSource)) {
+                if (p.equals(topLeft)) {
+                    return bottomRight;
+                }
+                return topLeft;
+            }
+        }
+        return p;
     }
 
     public void draw(WorldState ws) {
@@ -40,37 +75,27 @@ public class Room implements Comparable<Room> {
                 ws.setTile(topLeft.getX() + i, topLeft.getY() - j, TILE);
             }
         }
+        if (isLightSource) {
+            ws.setTile(lightSource.getX(), lightSource.getY(), LIGHT);
+        }
         drawWalls(ws);
     }
 
-    public int getWidth() {
-        return width;
+    public void generateLightSource(Random random) {
+        int i = random.nextInt(width);
+        int j = random.nextInt(height);
+        lightSource = new Position(topLeft.getX() + i, topLeft.getY() - j);
     }
 
-    public int getHeight() {
-        return height;
-    }
-
-    public void printRoom() {
-        System.out.println("Room's top left is at x:" + topLeft.getX() + " y:" + topLeft.getY() + ".");
-        System.out.println("With width " + width + " height " + height);
-        System.out.println("Room's bottom right is at x:" + bottomRight.getX() + " y:" + bottomRight.getY() + ".");
-        System.out.println("");
-    }
-
-    public Position getTopLeft() {
-        return topLeft;
-    }
-
-    public Position getBottomRight() {
-        return bottomRight;
-    }
-
-    public Room(Position topLeft, int width, int height) {
+    public Room(Position topLeft, int width, int height, Random random) {
         this.topLeft = topLeft;
         this.bottomRight = new Position(topLeft.getX() + width - 1, topLeft.getY() - height + 1);
         this.width = width;
         this.height = height;
+        if (width > 0 && height > 1 || width > 1 && height > 0) {
+            isLightSource = true;
+            generateLightSource(random);
+        }
     }
 
     @Override

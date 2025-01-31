@@ -23,23 +23,23 @@ public class HallWay {
         int i = bottom.getX();
         for (int j = bottom.getY() + 1; j < top.getY(); j++) {
             ws.setTile(i, j, TILE);
-            if (!ws.isTile(i - 1, j, TILE)) {
+            if (!ws.isFloorTile(i - 1, j)) {
                 ws.setTile(i - 1, j, WALL);
             }
-            if (!ws.isTile(i + 1, j, TILE)) {
+            if (!ws.isFloorTile(i + 1, j)) {
                 ws.setTile(i + 1, j, WALL);
             }
         }
-        if (!ws.isTile(i - 1, bottom.getY(), TILE)) {
+        if (!ws.isFloorTile(i - 1, bottom.getY())) {
             ws.setTile(i - 1, bottom.getY(), WALL);
         }
-        if (!ws.isTile(i - 1, top.getY(), TILE)) {
+        if (!ws.isFloorTile(i - 1, top.getY())) {
             ws.setTile(i - 1, top.getY(), WALL);
         }
-        if (!ws.isTile(i + 1, bottom.getY(), TILE)) {
+        if (!ws.isFloorTile(i + 1, bottom.getY())) {
             ws.setTile(i + 1, bottom.getY(), WALL);
         }
-        if (!ws.isTile(i + 1, top.getY(), TILE)) {
+        if (!ws.isFloorTile(i + 1, top.getY())) {
             ws.setTile(i + 1, top.getY(), WALL);
         }
 
@@ -49,23 +49,23 @@ public class HallWay {
         int j = left.getY();
         for (int i = left.getX() + 1; i < right.getX(); i++) {
             ws.setTile(i, j, TILE);
-            if (!ws.isTile(i + 1, j - 1, TILE)) {
+            if (!ws.isFloorTile(i + 1, j - 1)) {
                 ws.setTile(i + 1, j - 1, WALL);
             }
-            if (!ws.isTile(i + 1, j + 1, TILE)) {
+            if (!ws.isFloorTile(i + 1, j + 1)) {
                 ws.setTile(i + 1, j + 1, WALL);
             }
         }
-        if (!ws.isTile(left.getX(), j - 1, TILE)) {
+        if (!ws.isFloorTile(left.getX(), j - 1)) {
             ws.setTile(left.getX(), j - 1, WALL);
         }
-        if (!ws.isTile(right.getX(), j - 1, TILE)) {
+        if (!ws.isFloorTile(right.getX(), j - 1)) {
             ws.setTile(right.getX(), j - 1, WALL);
         }
-        if (!ws.isTile(left.getX(), j + 1, TILE)) {
+        if (!ws.isFloorTile(left.getX(), j + 1)) {
             ws.setTile(left.getX(), j + 1, WALL);
         }
-        if (!ws.isTile(right.getX(), j + 1, TILE)) {
+        if (!ws.isFloorTile(right.getX(), j + 1)) {
             ws.setTile(right.getX(), j + 1, WALL);
         }
 
@@ -75,23 +75,23 @@ public class HallWay {
         int j = right.getY();
         for (int i = right.getX() - 1; i >= left.getX(); i--) {
             ws.setTile(i, j, TILE);
-            if (!ws.isTile(i, j - 1, TILE)) {
+            if (!ws.isFloorTile(i, j - 1)) {
                 ws.setTile(i, j - 1, WALL);
             }
-            if (!ws.isTile(i, j + 1, TILE)) {
+            if (!ws.isFloorTile(i, j + 1)) {
                 ws.setTile(i, j + 1, WALL);
             }
         }
-        if (!ws.isTile(left.getX() - 1, j - 1, TILE)) {
+        if (!ws.isFloorTile(left.getX() - 1, j - 1)) {
             ws.setTile(left.getX() - 1, j - 1, WALL);
         }
-        if (!ws.isTile(right.getX(), j - 1, TILE)) {
+        if (!ws.isFloorTile(right.getX(), j - 1)) {
             ws.setTile(right.getX(), j - 1, WALL);
         }
-        if (!ws.isTile(left.getX() - 1, j + 1, TILE)) {
+        if (!ws.isFloorTile(left.getX() - 1, j + 1)) {
             ws.setTile(left.getX() - 1, j + 1, WALL);
         }
-        if (!ws.isTile(right.getX(), j + 1, TILE)) {
+        if (!ws.isFloorTile(right.getX(), j + 1)) {
             ws.setTile(right.getX(), j + 1, WALL);
         }
     }

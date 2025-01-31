@@ -7,7 +7,7 @@ import java.awt.*;
 public class Display {
     private int width;
     private int height;
-    private static final int LEFT_OFFSET = 10;
+    private static final int LEFT_OFFSET = 5;
 
     public void showHeadsUpDisplay(WorldState ws, int hudTopOffset) {
         Font font = new Font("Monaco", Font.BOLD, 16);

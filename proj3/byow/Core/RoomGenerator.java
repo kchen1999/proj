@@ -39,7 +39,7 @@ public class RoomGenerator {
         } else {
             randomHeight = random.nextInt(ROOM_MAX_HEIGHT) + 1;
         }
-        return new Room(topLeft, randomWidth, randomHeight);
+        return new Room(topLeft, randomWidth, randomHeight, random);
 
     }
 

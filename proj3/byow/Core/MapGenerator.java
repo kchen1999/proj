@@ -118,6 +118,13 @@ public class MapGenerator {
         return mapWidth;
     }
 
+    private void generateRandomPlayerPosition() {
+        for (Room room : ROOMS) {
+            playerPosition = room.generateRandomPlayerPosition(random);
+            break;
+        }
+    }
+
     public WorldState generate() {
         int mapLeftOffset = randomMapLeftOffset();
         int mapTopOffset = randomMapTopOffset();
@@ -131,16 +138,15 @@ public class MapGenerator {
             while (true) {
                 Room room = rg.generate();
                 if (!isOverlap(room)) {
-                    if (i == 0) {
-                        playerPosition = room.generateRandomPlayerPosition(random);
-                    }
                     room.draw(ws);
+                    room.printRoom();
                     addPath(room);
                     ROOMS.add(room);
                     break;
                 }
             }
         }
+        generateRandomPlayerPosition();
         HallWay.generate(ws, PATHS, numOfRooms);
         return ws;
     }

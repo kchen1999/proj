@@ -18,6 +18,10 @@ public class WorldState {
         return world[x][y].equals(tile);
     }
 
+    public static boolean isFloorTile(int x, int y) {
+        return world[x][y].equals(Tileset.FLOOR)|| world[x][y].equals(Tileset.LIGHT);
+    }
+
     public static boolean isWall(int x, int y) {
         return world[x][y].equals(Tileset.WALL);
     }
