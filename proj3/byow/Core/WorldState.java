@@ -26,6 +26,10 @@ public class WorldState {
         return worldTiles[x][y].getTile().equals(Tileset.NOTHING);
     }
 
+    public int getTilesAhead() {
+        return TILES_AHEAD;
+    }
+
     public static String getTile(int x, int y) {
         if (isWall(x, y)) {
             return "wall";

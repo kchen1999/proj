@@ -17,6 +17,7 @@ public class Engine {
     private TERenderer ter;
     private Display display;
     private boolean lineOfSight = false;
+    private int moves = 0;
 
     public static int getHudTopOffset() {
         return HUD_TOP_OFFSET;
@@ -40,7 +41,10 @@ public class Engine {
     }
 
     private void playGame(char c) {
-        user.move(ws, c);
+        boolean validMove = user.move(ws, c);
+        if (validMove) {
+            moves += 1;
+        }
     }
 
     private void loadWorldState() {
@@ -55,6 +59,11 @@ public class Engine {
         ter.initialize(WIDTH, HEIGHT + HUD_TOP_OFFSET, 0, HUD_TOP_OFFSET / 2);
         display = new Display(WIDTH, HEIGHT);
         display.loadMainMenu();
+    }
+
+    private void toggleLineOfSight() {
+        lineOfSight = !lineOfSight;
+        moves = 0;
     }
 
 
@@ -103,6 +112,7 @@ public class Engine {
             }
             prevChar = c;
         }
+
         while (isLoaded) {
             refreshMap();
             StdDraw.pause(50);
@@ -116,7 +126,16 @@ public class Engine {
                     }
                 } else {
                     if (c == 'X') {
-                        lineOfSight = !lineOfSight;
+                        if (lineOfSight) {
+                            if (moves > ws.getTilesAhead() * 4) {
+                                toggleLineOfSight();
+                            }
+                        } else {
+                            toggleLineOfSight();
+                        }
+                    }
+                    if (!lineOfSight && moves > ws.getTilesAhead() * 2) {
+                        toggleLineOfSight();
                     }
                     playGame(c);
                 }
