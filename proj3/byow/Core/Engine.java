@@ -47,6 +47,8 @@ public class Engine {
     private void playGame(char c) {
         boolean validMove = user.move(ws, c);
         if (validMove) {
+            enemy1.move(ws, user.getPosition());
+            enemy2.move(ws, user.getPosition());
             moves += 1;
         }
     }

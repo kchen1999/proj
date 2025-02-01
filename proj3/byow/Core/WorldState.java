@@ -40,6 +40,10 @@ public class WorldState {
         return TILES_AHEAD;
     }
 
+    public static Tile[][] getWorldTiles() {
+        return worldTiles;
+    }
+
     public static String getTile(int x, int y) {
         if (isWall(x, y)) {
             return "wall";
@@ -105,16 +109,16 @@ public class WorldState {
 
     public List<Tile> getAdjTiles(int x, int y) {
         List<Tile> list = new ArrayList<>();
-        if (!isOutOfBounds(x - 1, y) && isTile(x - 1, y, Tileset.FLOOR)) {
+        if (!isOutOfBounds(x - 1, y) && isFloorTile(x - 1, y)) {
             list.add(worldTiles[x - 1][y]);
         }
-        if (!isOutOfBounds(x + 1, y) && isTile(x + 1, y, Tileset.FLOOR)) {
-            list.add(worldTiles[x - 1][y]);
+        if (!isOutOfBounds(x + 1, y) && isFloorTile(x + 1, y)) {
+            list.add(worldTiles[x + 1][y]);
         }
-        if (!isOutOfBounds(x, y - 1) && isTile(x, y - 1, Tileset.FLOOR)) {
+        if (!isOutOfBounds(x, y - 1) && isFloorTile(x, y - 1)) {
             list.add(worldTiles[x][y - 1]);
         }
-        if (!isOutOfBounds(x, y + 1) && isTile(x, y + 1, Tileset.FLOOR)) {
+        if (!isOutOfBounds(x, y + 1) && isFloorTile(x, y + 1)) {
             list.add(worldTiles[x][y + 1]);
         }
         return list;
