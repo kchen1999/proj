@@ -3,6 +3,9 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WorldState {
     private static final int TILES_AHEAD = 5;
     private static int width;
@@ -52,7 +55,7 @@ public class WorldState {
     private static void showWorld() {
         for (int x = 0; x < width; x += 1) {
             for (int y = 0; y < height; y += 1) {
-                if (isTile(x, y, Tileset.AVATAR)) {
+                if (isTile(x, y, Tileset.AVATAR) || isTile(x, y, Tileset.SAND)) {
                     continue;
                 }
                 world[x][y] = worldTiles[x][y].getTile();
@@ -100,10 +103,32 @@ public class WorldState {
         return world;
     }
 
+    public List<Tile> getAdjTiles(int x, int y) {
+        List<Tile> list = new ArrayList<>();
+        if (!isOutOfBounds(x - 1, y) && isTile(x - 1, y, Tileset.FLOOR)) {
+            list.add(worldTiles[x - 1][y]);
+        }
+        if (!isOutOfBounds(x + 1, y) && isTile(x + 1, y, Tileset.FLOOR)) {
+            list.add(worldTiles[x - 1][y]);
+        }
+        if (!isOutOfBounds(x, y - 1) && isTile(x, y - 1, Tileset.FLOOR)) {
+            list.add(worldTiles[x][y - 1]);
+        }
+        if (!isOutOfBounds(x, y + 1) && isTile(x, y + 1, Tileset.FLOOR)) {
+            list.add(worldTiles[x][y + 1]);
+        }
+        return list;
+    }
+
     public void setWorldTiles() {
         for (int x = 0; x < width; x += 1) {
             for (int y = 0; y < height; y += 1) {
-                worldTiles[x][y] = new Tile(world[x][y]);
+                worldTiles[x][y] = new Tile(world[x][y], x, y);
+            }
+        }
+        for (int x = 0; x < width; x += 1) {
+            for (int y = 0; y < height; y += 1) {
+                worldTiles[x][y].setAdj(getAdjTiles(x, y));
             }
         }
     }
@@ -112,7 +137,7 @@ public class WorldState {
         for (int x = 0; x < width; x += 1) {
             for (int y = 0; y < height; y += 1) {
                 world[x][y] = Tileset.NOTHING;
-                worldTiles[x][y] = new Tile(Tileset.NOTHING);
+                worldTiles[x][y] = new Tile(Tileset.NOTHING, x, y);
             }
         }
     }

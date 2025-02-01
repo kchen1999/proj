@@ -2,14 +2,66 @@ package byow.Core;
 
 import byow.TileEngine.TETile;
 
-public class Tile {
+import java.util.List;
+
+public class Tile implements Comparable<Tile> {
     private TETile tile;
+    private int x;
+    private int y;
+    private List<Tile> adj;
+    private int distFromS;
+    private int distToT;
+    private Tile prev;
 
     public TETile getTile() {
         return tile;
     }
 
-    public Tile(TETile tile) {
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getDistFromS() {
+        return distFromS;
+    }
+
+    public List<Tile> getAdj() {
+        return adj;
+    }
+
+    public Tile getPrev() {
+        return prev;
+    }
+
+    public void setDistFromS(int distFromS) {
+        this.distFromS = distFromS;
+    }
+
+    public void setDistToT(int distToT) {
+        this.distToT = distToT;
+    }
+
+    public void setPrev(Tile prev) {
+        this.prev = prev;
+    }
+
+    public void setAdj(List<Tile> adj) {
+        this.adj = adj;
+    }
+
+    public Tile(TETile tile, int x, int y) {
         this.tile = tile;
+        this.x = x;
+        this.y = y;
+        this.distFromS = Integer.MAX_VALUE;
+    }
+
+    @Override
+    public int compareTo(Tile w) {
+        return this.distFromS + this.distToT - w.distFromS - w.distToT;
     }
 }

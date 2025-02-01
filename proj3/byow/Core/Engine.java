@@ -6,14 +6,16 @@ import edu.princeton.cs.introcs.StdDraw;
 
 
 public class Engine {
-    public static final int WIDTH = 80;
-    public static final int HEIGHT = 30;
+    private static final int WIDTH = 80;
+    private static final int HEIGHT = 30;
     private static final int KEYBOARD = 0;
     private static final int STRING = 1;
     private static final int HUD_TOP_OFFSET = 10;
     private String seed;
     private WorldState ws;
     private Player user;
+    private Enemy enemy1;
+    private Enemy enemy2;
     private TERenderer ter;
     private Display display;
     private boolean lineOfSight = false;
@@ -37,6 +39,8 @@ public class Engine {
         ws = mg.generate();
         ws.setWorldTiles();
         user = new Player(ws, mg.getPlayerPosition());
+        enemy1 = new Enemy(ws, mg.getEnemyPositions().get(0));
+        enemy2 = new Enemy(ws, mg.getEnemyPositions().get(1));
         ter.renderFrame(ws.terrainGrid());
     }
 
@@ -125,16 +129,16 @@ public class Engine {
                         System.exit(0);
                     }
                 } else {
-                    if (c == 'X') {
+                    if (c == 'Q') {
                         if (lineOfSight) {
-                            if (moves > ws.getTilesAhead() * 4) {
+                            if (moves > ws.getTilesAhead() * ws.getTilesAhead()) {
                                 toggleLineOfSight();
                             }
                         } else {
                             toggleLineOfSight();
                         }
                     }
-                    if (!lineOfSight && moves > ws.getTilesAhead() * 2) {
+                    if (!lineOfSight && moves > ws.getTilesAhead()) {
                         toggleLineOfSight();
                     }
                     playGame(c);

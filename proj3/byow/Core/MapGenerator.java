@@ -1,13 +1,17 @@
 package byow.Core;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Random;
 
 
 public class MapGenerator {
-    private static final Set<Room> ROOMS = new TreeSet<>();
+    private static final TreeSet<Room> ROOMS = new TreeSet<>();
     private static final Set<Path> PATHS = new TreeSet<>();
+    private static final List<Position> enemyPositions = new ArrayList<>();
+    private static final int numOfEnemies = 2;
     private static int width;
     private static int height;
     private static Position playerPosition;
@@ -15,6 +19,10 @@ public class MapGenerator {
 
     public Position getPlayerPosition() {
         return playerPosition;
+    }
+
+    public List<Position> getEnemyPositions() {
+        return enemyPositions;
     }
 
     private void addPath(Room room) {
@@ -118,11 +126,25 @@ public class MapGenerator {
         return mapWidth;
     }
 
-    private void generateRandomPlayerPosition() {
+    private void generatePlayerPosition() {
         for (Room room : ROOMS) {
-            playerPosition = room.generateRandomPlayerPosition(random);
+            playerPosition = room.generateRandomPosition(random);
             break;
         }
+    }
+
+    private void generateEnemyPositions(int j) {
+        int i = 0;
+        for (Room room : ROOMS.descendingSet()) {
+            if (i == ROOMS.size() / 2 + 1) {
+                break;
+            }
+            if (i == 0 || i == ROOMS.size() / 2) {
+                enemyPositions.add(room.generateRandomPosition(random));
+            }
+            i += 1;
+        }
+
     }
 
     public WorldState generate() {
@@ -146,7 +168,8 @@ public class MapGenerator {
                 }
             }
         }
-        generateRandomPlayerPosition();
+        generatePlayerPosition();
+        generateEnemyPositions(numOfEnemies);
         HallWay.generate(ws, PATHS, numOfRooms);
         return ws;
     }

@@ -53,7 +53,7 @@ public class Room implements Comparable<Room> {
         }
     }
 
-    public Position generateRandomPlayerPosition(Random random) {
+    public Position generateRandomPosition(Random random) {
         int i = random.nextInt(width);
         int j = random.nextInt(height);
         Position p = new Position(topLeft.getX() + i, topLeft.getY() - j);
@@ -104,8 +104,16 @@ public class Room implements Comparable<Room> {
     }
 
     public void generateLightSource(Random random) {
-        int i = random.nextInt(width);
-        int j = random.nextInt(height);
+        int i = 0;
+        int j = 0;
+        if (width == 1) {
+            j = height / 2;
+        } else if (height == 1) {
+            i = width / 2;
+        } else {
+            i = random.nextInt(width);
+            j = random.nextInt(height);
+        }
         lightSource = new Position(topLeft.getX() + i, topLeft.getY() - j);
     }
 
@@ -114,7 +122,7 @@ public class Room implements Comparable<Room> {
         this.bottomRight = new Position(topLeft.getX() + width - 1, topLeft.getY() - height + 1);
         this.width = width;
         this.height = height;
-        if (width > 1 && height > 1) {
+        if (width > 0 && height > 3 || width > 3 && height > 0) {
             isLightSource = true;
             generateLightSource(random);
         }
