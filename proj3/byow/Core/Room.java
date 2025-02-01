@@ -8,7 +8,6 @@ import java.util.Random;
 public class Room implements Comparable<Room> {
     private static final TETile TILE = Tileset.FLOOR;
     private static final TETile WALL = Tileset.WALL;
-    private static final TETile LIGHT = Tileset.LIGHT;
     private Position topLeft;
     private Position bottomRight;
     private Position lightSource;
@@ -69,6 +68,28 @@ public class Room implements Comparable<Room> {
         return p;
     }
 
+    private int distanceFromLightSource(int x, int y) {
+        return Math.max(Math.abs(x - lightSource.getX()), Math.abs(y - lightSource.getY()));
+    }
+
+    private void turnLightingOn(WorldState ws) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int x = topLeft.getX() + i;
+                int y = topLeft.getY() - j;
+                if (distanceFromLightSource(x, y) == 1) {
+                    ws.setTile(x, y, Tileset.FLOOR1);
+                } else if (distanceFromLightSource(x, y) == 2) {
+                    ws.setTile(x, y, Tileset.FLOOR2);
+                } else if (distanceFromLightSource(x, y) == 3) {
+                    ws.setTile(x, y, Tileset.FLOOR3);
+                } else if (distanceFromLightSource(x, y) >= 4) {
+                    ws.setTile(x, y, Tileset.FLOOR4);
+                }
+            }
+        }
+    }
+
     public void draw(WorldState ws) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -76,7 +97,8 @@ public class Room implements Comparable<Room> {
             }
         }
         if (isLightSource) {
-            ws.setTile(lightSource.getX(), lightSource.getY(), LIGHT);
+            turnLightingOn(ws);
+            ws.setTile(lightSource.getX(), lightSource.getY(), Tileset.LIGHT);
         }
         drawWalls(ws);
     }
@@ -92,7 +114,7 @@ public class Room implements Comparable<Room> {
         this.bottomRight = new Position(topLeft.getX() + width - 1, topLeft.getY() - height + 1);
         this.width = width;
         this.height = height;
-        if (width > 0 && height > 1 || width > 1 && height > 0) {
+        if (width > 1 && height > 1) {
             isLightSource = true;
             generateLightSource(random);
         }

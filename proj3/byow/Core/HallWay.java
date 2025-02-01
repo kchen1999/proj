@@ -22,7 +22,9 @@ public class HallWay {
     private static void drawVerticalHallWay(WorldState ws, Position bottom, Position top) {
         int i = bottom.getX();
         for (int j = bottom.getY() + 1; j < top.getY(); j++) {
-            ws.setTile(i, j, TILE);
+            if (!ws.isFloorTile(i, j)) {
+                ws.setTile(i, j, TILE);;
+            }
             if (!ws.isFloorTile(i - 1, j)) {
                 ws.setTile(i - 1, j, WALL);
             }
@@ -48,7 +50,9 @@ public class HallWay {
     private static void drawHorizontalHallWayLtoR(WorldState ws, Position left, Position right) {
         int j = left.getY();
         for (int i = left.getX() + 1; i < right.getX(); i++) {
-            ws.setTile(i, j, TILE);
+            if (!ws.isFloorTile(i, j)) {
+                ws.setTile(i, j, TILE);;
+            }
             if (!ws.isFloorTile(i + 1, j - 1)) {
                 ws.setTile(i + 1, j - 1, WALL);
             }
@@ -74,7 +78,9 @@ public class HallWay {
     private static void drawHorizontalHallWayRtoL(WorldState ws, Position right, Position left) {
         int j = right.getY();
         for (int i = right.getX() - 1; i >= left.getX(); i--) {
-            ws.setTile(i, j, TILE);
+            if (!ws.isFloorTile(i, j)) {
+                ws.setTile(i, j, TILE);;
+            }
             if (!ws.isFloorTile(i, j - 1)) {
                 ws.setTile(i, j - 1, WALL);
             }

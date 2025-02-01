@@ -19,7 +19,10 @@ public class WorldState {
     }
 
     public static boolean isFloorTile(int x, int y) {
-        return world[x][y].equals(Tileset.FLOOR)|| world[x][y].equals(Tileset.LIGHT);
+        return world[x][y].equals(Tileset.FLOOR)|| world[x][y].equals(Tileset.FLOOR0)
+                || world[x][y].equals(Tileset.FLOOR1)|| world[x][y].equals(Tileset.FLOOR2)
+                || world[x][y].equals(Tileset.FLOOR3)|| world[x][y].equals(Tileset.FLOOR4)
+                || world[x][y].equals(Tileset.LIGHT);
     }
 
     public static boolean isWall(int x, int y) {
@@ -75,7 +78,7 @@ public class WorldState {
     }
 
     private boolean isOutOfBounds(int x, int y) {
-        return x >= width || y >= height || isBlank(x, y);
+        return x < 0 || y < 0 || x >= width || y >= height || isBlank(x, y);
     }
 
     private void generateLineOfSight(int x, int y, int tilesAhead) {
