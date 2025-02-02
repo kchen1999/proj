@@ -12,7 +12,7 @@ public class ShortestPath {
         return Math.abs(w.getX() - t.getX()) + Math.abs(w.getY() - t.getY());
     }
 
-    private static void relax(PriorityQueue<Tile> fringe, Tile v, Tile w, Tile t) {
+    private static void relax(PriorityQueue<Tile> fringe, Tile v, Tile w) {
         int d = v.getDistFromS() + 1;
         if (d < w.getDistFromS()) {
             w.setDistFromS(d);
@@ -42,7 +42,7 @@ public class ShortestPath {
             }
             for (Tile w : v.getAdj()) {
                 w.setDistToT(calculateDistance(w, t));
-                relax(fringe, v, w, t);
+                relax(fringe, v, w);
                 allVisitedTiles.add(w);
             }
         }

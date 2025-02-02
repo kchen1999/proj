@@ -130,7 +130,7 @@ public class Engine {
                     if (inputType == KEYBOARD) {
                         System.exit(0);
                     }
-                } else {
+                } else { /*
                     if (c == 'Q') {
                         if (lineOfSight) {
                             if (moves > ws.getTilesAhead() * ws.getTilesAhead()) {
@@ -142,7 +142,7 @@ public class Engine {
                     }
                     if (!lineOfSight && moves > ws.getTilesAhead()) {
                         toggleLineOfSight();
-                    }
+                    } */
                     playGame(c);
                 }
                 prevChar = c;

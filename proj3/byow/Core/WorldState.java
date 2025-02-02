@@ -8,6 +8,9 @@ import java.util.List;
 
 public class WorldState {
     private static final int TILES_AHEAD = 5;
+    private static final TETile PLAYER = Tileset.AVATAR;
+    private static final TETile BLANK = Tileset.NOTHING;
+    private static final TETile ENEMY = Tileset.SAND;
     private static int width;
     private static int height;
     private static TETile[][] world;
@@ -33,7 +36,7 @@ public class WorldState {
     }
 
     public static boolean isBlank(int x, int y) {
-        return worldTiles[x][y].getTile().equals(Tileset.NOTHING);
+        return worldTiles[x][y].getTile().equals(BLANK);
     }
 
     public int getTilesAhead() {
@@ -49,7 +52,7 @@ public class WorldState {
             return "wall";
         } else if (isTile(x, y, Tileset.FLOOR)) {
             return "floor";
-        } else if (isTile(x, y, Tileset.AVATAR)) {
+        } else if (isTile(x, y, PLAYER)) {
             return "player";
         } else {
             return "blank";
@@ -59,7 +62,7 @@ public class WorldState {
     private static void showWorld() {
         for (int x = 0; x < width; x += 1) {
             for (int y = 0; y < height; y += 1) {
-                if (isTile(x, y, Tileset.AVATAR) || isTile(x, y, Tileset.SAND)) {
+                if (isTile(x, y, PLAYER) || isTile(x, y, ENEMY)) {
                     continue;
                 }
                 world[x][y] = worldTiles[x][y].getTile();
@@ -70,10 +73,10 @@ public class WorldState {
     private static void hideWorld() {
         for (int x = 0; x < width; x += 1) {
             for (int y = 0; y < height; y += 1) {
-                if (isTile(x, y, Tileset.AVATAR)) {
+                if (isTile(x, y, PLAYER) || isTile(x, y, ENEMY)) {
                     continue;
                 }
-                world[x][y] = Tileset.NOTHING;
+                world[x][y] = BLANK;
             }
         }
     }
@@ -92,7 +95,7 @@ public class WorldState {
         if (isOutOfBounds(x, y) || tilesAhead < 0) {
             return;
         }
-        if (!isTile(x, y, Tileset.AVATAR)) {
+        if (!isTile(x, y, PLAYER)) {
             setTile(x, y, worldTiles[x][y].getTile());
         }
         generateLineOfSight(x, y + 1, tilesAhead - 1);
@@ -140,8 +143,8 @@ public class WorldState {
     private static void initializeWorld() {
         for (int x = 0; x < width; x += 1) {
             for (int y = 0; y < height; y += 1) {
-                world[x][y] = Tileset.NOTHING;
-                worldTiles[x][y] = new Tile(Tileset.NOTHING, x, y);
+                world[x][y] = BLANK;
+                worldTiles[x][y] = new Tile(BLANK, x, y);
             }
         }
     }

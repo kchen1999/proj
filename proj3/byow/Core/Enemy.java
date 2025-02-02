@@ -7,7 +7,8 @@ import java.util.List;
 
 public class Enemy {
     private Position p;
-    private static final TETile TILE = Tileset.SAND;
+    private static final TETile PLAYER = Tileset.AVATAR;
+    private static final TETile ENEMY = Tileset.SAND;
     private static final TETile FLOOR = Tileset.FLOOR;
 
     public Position getPosition() {
@@ -17,7 +18,7 @@ public class Enemy {
     public void updatePosition(WorldState ws, Position p) {
         ws.setTile(this.p.getX(), this.p.getY(), FLOOR);
         this.p = p;
-        ws.setTile(p.getX(), p.getY(), TILE);
+        ws.setTile(p.getX(), p.getY(), ENEMY);
     }
 
     public void move(WorldState ws, Position playerPosition) {
@@ -26,14 +27,18 @@ public class Enemy {
                 worldTiles[playerPosition.getX()][playerPosition.getY()]);
         int x = list.get(1).getX();
         int y = list.get(1).getY();
-        ws.setTile(x, y, TILE);
-        ws.setTile(p.getX(), p.getY(), FLOOR);
-        p = new Position(x, y);
+        if (ws.isTile(x, y, PLAYER) || ws.isTile(x, y, ENEMY)) {
+            System.out.println("Hi");
+        } else {
+            ws.setTile(x, y, ENEMY);
+            ws.setTile(p.getX(), p.getY(), FLOOR);
+            p = new Position(x, y);
+        }
     }
 
 
     public Enemy(WorldState ws, Position p) {
         this.p = p;
-        ws.setTile(p.getX(), p.getY(), TILE);
+        ws.setTile(p.getX(), p.getY(), ENEMY);
     }
 }

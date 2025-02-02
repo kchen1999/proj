@@ -62,6 +62,10 @@ public class Tile implements Comparable<Tile> {
 
     @Override
     public int compareTo(Tile w) {
-        return this.distFromS + this.distToT - w.distFromS - w.distToT;
+        if (this.distFromS + this.distToT - w.distFromS - w.distToT == 0) {
+            return this.distToT - w.distToT;
+        } else {
+            return this.distFromS + this.distToT - w.distFromS - w.distToT;
+        }
     }
 }
