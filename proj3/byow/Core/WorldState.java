@@ -127,13 +127,11 @@ public class WorldState {
     public TETile[][] showEnemyPaths(List<Tile> path1, List<Tile> path2, Player user, boolean lineOfSight) {
         if (lineOfSight) {
             playerLineOfSight(user);
-            showEnemyPath(path1);
-            showEnemyPath(path2);
         } else {
             showWorld();
-            showEnemyPath(path1);
-            showEnemyPath(path2);
         }
+        showEnemyPath(path1);
+        showEnemyPath(path2);
         return world;
     }
 

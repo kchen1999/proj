@@ -2,7 +2,6 @@ package byow.Core;
 
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
-import edu.princeton.cs.introcs.StdDraw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +33,7 @@ public class Enemy {
                 worldTiles[playerPosition.getX()][playerPosition.getY()]);
         int x = path.get(1).getX();
         int y = path.get(1).getY();
-        if (ws.isTile(x, y, PLAYER) || ws.isTile(x, y, ENEMY)) {
-            System.out.println("Hi");
-        } else {
+        if (!ws.isTile(x, y, PLAYER) && !ws.isTile(x, y, ENEMY)) {
             ws.setTile(x, y, ENEMY);
             ws.setTile(p.getX(), p.getY(), FLOOR);
             p = new Position(x, y);

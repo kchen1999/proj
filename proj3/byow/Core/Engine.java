@@ -60,8 +60,12 @@ public class Engine {
     private void loadWorldState() {
         seed = GameSaver.readSeed();
         Position savedPlayerPosition = GameSaver.readPlayerPosition();
+        Position savedEnemy1Position = GameSaver.readEnemy1Position();
+        Position savedEnemy2Position = GameSaver.readEnemy2Position();
         generateMap();
         user.updatePosition(ws, savedPlayerPosition);
+        enemy1.updatePosition(ws, savedEnemy1Position);
+        enemy2.updatePosition(ws, savedEnemy2Position);
     }
 
     private void initializeGame() {
@@ -111,7 +115,7 @@ public class Engine {
                     display.loadEnterRandomSeed(seedBuilder);
                 }
             } else if (c == 'Q' && prevChar == ':') {
-                GameSaver.save(seed, user.getPosition());
+                GameSaver.save(seed, user.getPosition(), enemy1.getPosition(), enemy2.getPosition());
                 if (inputType == KEYBOARD) {
                     System.exit(0);
                 }
@@ -130,7 +134,7 @@ public class Engine {
             if (inputSource.possibleNextInput()) {
                 char c = inputSource.getNextKey();
                 if (c == 'Q' && prevChar == ':') {
-                    GameSaver.save(seed, user.getPosition());
+                    GameSaver.save(seed, user.getPosition(), enemy1.getPosition(), enemy2.getPosition());
                     if (inputType == KEYBOARD) {
                         System.exit(0);
                     }
