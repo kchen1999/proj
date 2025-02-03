@@ -51,6 +51,10 @@ public class Engine {
             enemy2.move(ws, user.getPosition());
             moves += 1;
         }
+        if (c == 'E') {
+            ter.renderFrame(ws.showEnemyPaths(enemy1.getPath(), enemy2.getPath(), user, lineOfSight));
+            StdDraw.pause(500);
+        }
     }
 
     private void loadWorldState() {

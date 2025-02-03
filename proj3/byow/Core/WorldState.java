@@ -11,6 +11,7 @@ public class WorldState {
     private static final TETile PLAYER = Tileset.AVATAR;
     private static final TETile BLANK = Tileset.NOTHING;
     private static final TETile ENEMY = Tileset.SAND;
+    private static final TETile ENEMY_PATH = Tileset.ENEMY_PATH;
     private static int width;
     private static int height;
     private static TETile[][] world;
@@ -56,6 +57,19 @@ public class WorldState {
             return "player";
         } else {
             return "blank";
+        }
+    }
+
+    private static void showEnemyPath(List<Tile> path) {
+        int i = 0;
+        for (Tile tile : path) {
+            if (i == 0 || i == 1) {
+                i++;
+                continue;
+            }
+            if (!isTile(tile.getX(), tile.getY(), PLAYER) && !isTile(tile.getX(), tile.getY(), ENEMY)) {
+                setTile(tile.getX(), tile.getY(), ENEMY_PATH);
+            }
         }
     }
 
@@ -107,6 +121,19 @@ public class WorldState {
     public TETile[][] playerLineOfSight(Player user) {
         hideWorld();
         generateLineOfSight(user.getPosition().getX(), user.getPosition().getY(), TILES_AHEAD);
+        return world;
+    }
+
+    public TETile[][] showEnemyPaths(List<Tile> path1, List<Tile> path2, Player user, boolean lineOfSight) {
+        if (lineOfSight) {
+            playerLineOfSight(user);
+            showEnemyPath(path1);
+            showEnemyPath(path2);
+        } else {
+            showWorld();
+            showEnemyPath(path1);
+            showEnemyPath(path2);
+        }
         return world;
     }
 

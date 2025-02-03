@@ -2,7 +2,9 @@ package byow.Core;
 
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
+import edu.princeton.cs.introcs.StdDraw;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Enemy {
@@ -10,9 +12,14 @@ public class Enemy {
     private static final TETile PLAYER = Tileset.AVATAR;
     private static final TETile ENEMY = Tileset.SAND;
     private static final TETile FLOOR = Tileset.FLOOR;
+    private List<Tile> path = new ArrayList<>();
 
     public Position getPosition() {
         return p;
+    }
+
+    public List<Tile> getPath() {
+        return path;
     }
 
     public void updatePosition(WorldState ws, Position p) {
@@ -23,10 +30,10 @@ public class Enemy {
 
     public void move(WorldState ws, Position playerPosition) {
         Tile[][] worldTiles = ws.getWorldTiles();
-        List<Tile> list = ShortestPath.generate(worldTiles[p.getX()][p.getY()],
+        path = ShortestPath.generate(worldTiles[p.getX()][p.getY()],
                 worldTiles[playerPosition.getX()][playerPosition.getY()]);
-        int x = list.get(1).getX();
-        int y = list.get(1).getY();
+        int x = path.get(1).getX();
+        int y = path.get(1).getY();
         if (ws.isTile(x, y, PLAYER) || ws.isTile(x, y, ENEMY)) {
             System.out.println("Hi");
         } else {
