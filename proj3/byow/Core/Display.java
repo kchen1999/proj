@@ -10,6 +10,8 @@ public class Display {
     private static final int HEADER_1_FONT = 32;
     private static final int HEADER_2_FONT = 21;
     private static final int HEADER_3_FONT = 14;
+    private static final int DISPLAY_ENEMY_PATHS_LIMIT = 3;
+    private static final int OBSCURED_VIEW_MOVES = 25;
     private static final String FONT = "Monaco";
 
     private void showTileUnderMouse(WorldState ws, int hudTopOffset) {
@@ -23,18 +25,19 @@ public class Display {
         StdDraw.textLeft(LEFT_OFFSET, height - 1.2, "Tile: " + tileDescription);
     }
 
-    private void showNumOfMovesUntilFullView(int movesInCurrentView) {
+    private void showNumOfMovesUntilFullView(int movesInCurrentView, int displayEnemyPaths) {
         StdDraw.textLeft(LEFT_OFFSET, 1.2, "Moves in current view: " + movesInCurrentView +
-                "       Press Q to toggle view (after 26 moves)" +
-                "       Press E to show enemy paths");
+                "       Press Q to toggle view (after " + OBSCURED_VIEW_MOVES + " moves)" +
+                "       Press E to show enemy paths (" + (DISPLAY_ENEMY_PATHS_LIMIT - displayEnemyPaths) +
+                " times remaining)");
     }
 
-    public void showHeadsUpDisplay(WorldState ws, int hudTopOffset, int movesInCurrentView) {
-        Font font = new Font(FONT, Font.BOLD, 16);
+    public void showHeadsUpDisplay(WorldState ws, int hudTopOffset, int movesInCurrentView, int displayEnemyPaths) {
+        Font font = new Font(FONT, Font.BOLD, 15);
         StdDraw.setFont(font);
         StdDraw.setPenColor(Color.WHITE);
         showTileUnderMouse(ws, hudTopOffset);
-        showNumOfMovesUntilFullView(movesInCurrentView);
+        showNumOfMovesUntilFullView(movesInCurrentView, displayEnemyPaths );
         StdDraw.show();
     }
 
@@ -69,17 +72,30 @@ public class Display {
 
     public void loadInstructions() {
         StdDraw.clear(Color.BLACK);
-        Font font = new Font(FONT, Font.BOLD, HEADER_2_FONT);
+        Font font = new Font(FONT, Font.BOLD, HEADER_1_FONT);
         StdDraw.setFont(font);
-        StdDraw.text(width / 2, height / 2, "In the shifting void, sight is fleeting.");
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(width / 2, height / 4 * 3, "INSTRUCTIONS / LORE");
+        font = new Font(FONT, Font.BOLD, HEADER_2_FONT);
+        StdDraw.setFont(font);
+        StdDraw.text(width / 2, height / 2 + 3, "In the shifting void, sight is fleeting.");
         font = new Font(FONT, Font.PLAIN, HEADER_3_FONT);
         StdDraw.setFont(font);
-        StdDraw.text(width / 2, height / 2 - 3.2, "Every 25 steps, darkness swallows the world, leaving only " +
+        StdDraw.text(width / 2, height / 2 - 0.2, "Every 25 steps, darkness swallows the world, leaving only " +
                 "instinct to guide you.");
-        StdDraw.text(width / 2, height / 2 - 4.8, "For 5 fleeting moments, clarity returns—just enough to glimpse the dangers that " +
+        StdDraw.text(width / 2, height / 2 - 1.8, "For 5 fleeting moments, clarity returns—just enough to glimpse the dangers that " +
                 "lurk.");
-        StdDraw.text(width / 2, height / 2 - 6.4, "Two relentless hunters stalk your path, unseen until it’s too late. If they catch you, your " +
+        StdDraw.text(width / 2, height / 2 - 3.4, "Two relentless hunters stalk your path, unseen until it’s too late. If they catch you, your " +
                 "journey ends.");
+        font = new Font(FONT, Font.BOLD, HEADER_2_FONT);
+        StdDraw.setFont(font);
+        StdDraw.text(width / 2, height / 2 - 6.6, "Somewhere in the depths, a single flower waits. A beacon. A goal. A test of your will.");
+        font = new Font(FONT, Font.PLAIN, HEADER_3_FONT);
+        StdDraw.setFont(font);
+        StdDraw.text(width / 2, height / 2 - 9.8, "Three times, and only three, the enemy’s path will reveal itself—glowing red, a glimpse of the " +
+                "inevitable. ");
+        StdDraw.text(width / 2, height / 2 - 11.4, "Use it wisely, or be lost in the dark.");
+        StdDraw.text(width / 2, height / 2 - 13, "Can you reach the light before the darkness claims you?");
         StdDraw.show();
     }
 
@@ -92,10 +108,10 @@ public class Display {
         font = new Font(FONT, Font.BOLD, HEADER_2_FONT);
         StdDraw.setFont(font);
         StdDraw.text(width / 2, height / 2, "New Game (N)");
-        StdDraw.text(width / 2, height / 2 - 1.7, "Load Game (L)");
-        StdDraw.text(width / 2, height / 2 - 3.35, "Instructions (I)");
-        StdDraw.text(width / 2, height / 2 - 10, "Return to main menu (M)");
-        StdDraw.text(width / 2, height / 2 - 5, "Quit (:Q)");
+        StdDraw.text(width / 2, height / 2 - 1.75, "Load Game (L)");
+        StdDraw.text(width / 2, height / 2 - 3.5, "Instructions/Lore (I)");
+        StdDraw.text(width / 2, height / 2 - 5.25, "Return to main menu (M)");
+        StdDraw.text(width / 2, height / 2 - 7, "Quit (:Q)");
         StdDraw.show();
     }
 

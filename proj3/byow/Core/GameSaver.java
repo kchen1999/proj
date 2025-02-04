@@ -20,7 +20,8 @@ public class GameSaver {
         }
     }
 
-    public static void save(String seed, Position user, Position enemy1, Position enemy2) {
+    public static void save(String seed, Position user, Position enemy1, Position enemy2, int movesInCurrentView,
+                            int displayEnemyPaths, boolean lineOfSightMode) {
         File seedFile = new File("seed.txt");
         List<String> lines = Arrays.asList(seed);
         resetSavedState();
@@ -36,6 +37,15 @@ public class GameSaver {
         try {
             playerPositionFile.createNewFile();
             Files.write(Paths.get("savedEntityPositions.txt"), lines);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File numOfMovesFile = new File("numOfMoves.txt");
+        lines = Arrays.asList(String.valueOf(movesInCurrentView), String.valueOf(displayEnemyPaths),
+                String.valueOf(lineOfSightMode));
+        try {
+            numOfMovesFile.createNewFile();
+            Files.write(Paths.get("numOfMoves.txt"), lines);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,5 +103,35 @@ public class GameSaver {
             e.printStackTrace();
         }
         return new Position(x, y);
+    }
+
+    public static int readMovesInCurrentView() {
+        try {List<String> lines = Files.readAllLines(Paths.get("numOfMoves.txt"));
+           return Integer.parseInt(lines.get(0));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static int readDisplayEnemyPaths() {
+        try {List<String> lines = Files.readAllLines(Paths.get("numOfMoves.txt"));
+            return Integer.parseInt(lines.get(1));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static boolean readLineOfSightMode() {
+        try {List<String> lines = Files.readAllLines(Paths.get("numOfMoves.txt"));
+            return Boolean.parseBoolean(lines.get(2));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

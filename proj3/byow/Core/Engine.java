@@ -10,6 +10,8 @@ public class Engine {
     private static final int KEYBOARD = 0;
     private static final int STRING = 1;
     private static final int HUD_TOP_OFFSET = 10;
+    private static final int DISPLAY_ENEMY_PATHS_LIMIT = 3;
+    private static final int OBSCURED_VIEW_MOVES = 25;
     private static String seed;
     private static WorldState ws;
     private static Player user;
@@ -18,10 +20,11 @@ public class Engine {
     private static Flower flower;
     private static TERenderer ter;
     private static Display display;
-    private static boolean lineOfSight = false;
+    private static boolean lineOfSightMode = false;
     private static boolean gameOver = false;
     private static boolean victory = false ;
     private static int movesInCurrentView = 0;
+    private static int displayEnemyPaths = 0;
 
     public static int getHudTopOffset() {
         return HUD_TOP_OFFSET;
@@ -36,12 +39,12 @@ public class Engine {
     }
 
     private void refreshMap() {
-        if (lineOfSight) {
+        if (lineOfSightMode) {
             ter.renderFrame(ws.playerLineOfSight(user));
         } else {
             ter.renderFrame(ws.terrainGrid());
         }
-        display.showHeadsUpDisplay(ws, HUD_TOP_OFFSET, movesInCurrentView);
+        display.showHeadsUpDisplay(ws, HUD_TOP_OFFSET, movesInCurrentView, displayEnemyPaths);
     }
 
     private void generateMap() {
@@ -62,8 +65,9 @@ public class Engine {
             enemy2.move(ws, user.getPosition());
             movesInCurrentView += 1;
         }
-        if (c == 'E') {
-            ter.renderFrame(ws.showEnemyPaths(enemy1.getPath(), enemy2.getPath(), user, lineOfSight));
+        if (c == 'E' && displayEnemyPaths < DISPLAY_ENEMY_PATHS_LIMIT) {
+            displayEnemyPaths += 1;
+            ter.renderFrame(ws.showEnemyPaths(enemy1.getPath(), enemy2.getPath(), user, lineOfSightMode));
             StdDraw.pause(500);
         }
     }
@@ -73,6 +77,9 @@ public class Engine {
         Position savedPlayerPosition = GameSaver.readPlayerPosition();
         Position savedEnemy1Position = GameSaver.readEnemy1Position();
         Position savedEnemy2Position = GameSaver.readEnemy2Position();
+        movesInCurrentView = GameSaver.readMovesInCurrentView();
+        displayEnemyPaths = GameSaver.readDisplayEnemyPaths();
+        lineOfSightMode = GameSaver.readLineOfSightMode();
         generateMap();
         user.updatePosition(ws, savedPlayerPosition);
         enemy1.updatePosition(ws, savedEnemy1Position);
@@ -87,7 +94,7 @@ public class Engine {
     }
 
     private void toggleLineOfSight() {
-        lineOfSight = !lineOfSight;
+        lineOfSightMode = !lineOfSightMode;
         movesInCurrentView = 0;
     }
 
@@ -95,7 +102,8 @@ public class Engine {
         gameOver = false;
         victory = false;
         movesInCurrentView = 0;
-        lineOfSight = false;
+        displayEnemyPaths = 0;
+        lineOfSightMode = false;
     }
 
     private void playGame(int inputType, String input) {
@@ -138,7 +146,8 @@ public class Engine {
                 if (inputType == KEYBOARD) {
                     System.exit(0);
                 }
-                GameSaver.save(seed, user.getPosition(), enemy1.getPosition(), enemy2.getPosition());
+                GameSaver.save(seed, user.getPosition(), enemy1.getPosition(), enemy2.getPosition(), movesInCurrentView,
+                        displayEnemyPaths, lineOfSightMode);
             } else if (c == 'L') {
                 loadWorldState();
                 isLoaded = true;
@@ -156,21 +165,22 @@ public class Engine {
             if (inputSource.possibleNextInput()) {
                 char c = inputSource.getNextKey();
                 if (c == 'Q' && prevChar == ':') {
-                    GameSaver.save(seed, user.getPosition(), enemy1.getPosition(), enemy2.getPosition());
+                    GameSaver.save(seed, user.getPosition(), enemy1.getPosition(), enemy2.getPosition(), movesInCurrentView,
+                            displayEnemyPaths, lineOfSightMode);
                     if (inputType == KEYBOARD) {
                         System.exit(0);
                     }
                 } else {
                     if (c == 'Q') {
-                        if (lineOfSight) {
-                            if (movesInCurrentView > ws.getTilesAhead() * ws.getTilesAhead()) {
+                        if (lineOfSightMode) {
+                            if (movesInCurrentView >= OBSCURED_VIEW_MOVES) {
                                 toggleLineOfSight();
                             }
                         } else {
                             toggleLineOfSight();
                         }
                     }
-                    if (!lineOfSight && movesInCurrentView > ws.getTilesAhead()) {
+                    if (!lineOfSightMode && movesInCurrentView >= ws.getTilesAhead()) {
                         toggleLineOfSight();
                     }
                     movePlayer(c);
