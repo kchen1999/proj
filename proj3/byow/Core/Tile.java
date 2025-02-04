@@ -1,7 +1,6 @@
 package byow.Core;
 
 import byow.TileEngine.TETile;
-
 import java.util.List;
 
 public class Tile implements Comparable<Tile> {

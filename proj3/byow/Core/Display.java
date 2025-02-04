@@ -1,7 +1,6 @@
 package byow.Core;
 
 import edu.princeton.cs.introcs.StdDraw;
-
 import java.awt.*;
 
 public class Display {
@@ -20,16 +19,16 @@ public class Display {
         StdDraw.textLeft(LEFT_OFFSET, height - 1.2, "Tile: " + tileDescription);
     }
 
-    private void showNumOfMovesUntilFullView(int moves) {
-        StdDraw.textLeft(LEFT_OFFSET, 1.2, "Moves in current view: " + moves);
+    private void showNumOfMovesUntilFullView(int movesInCurrentView) {
+        StdDraw.textLeft(LEFT_OFFSET, 1.2, "Moves in current view: " + movesInCurrentView);
     }
 
-    public void showHeadsUpDisplay(WorldState ws, int hudTopOffset, int moves) {
+    public void showHeadsUpDisplay(WorldState ws, int hudTopOffset, int movesInCurrentView) {
         Font font = new Font("Monaco", Font.BOLD, 16);
         StdDraw.setFont(font);
         StdDraw.setPenColor(Color.WHITE);
         showTileUnderMouse(ws, hudTopOffset);
-        showNumOfMovesUntilFullView(moves);
+        showNumOfMovesUntilFullView(movesInCurrentView);
         StdDraw.show();
     }
 
@@ -37,6 +36,19 @@ public class Display {
         StdDraw.clear(Color.BLACK);
         StdDraw.text(width / 2, height / 2, "Enter random seed (Press S at end to confirm): ");
         StdDraw.text(width / 2, height / 2 - 3.2, seed.toString());
+        StdDraw.show();
+    }
+
+    public void loadGameOver() {
+        StdDraw.clear(Color.BLACK);
+        Font font = new Font("Monaco", Font.BOLD, 32);
+        StdDraw.setFont(font);
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(width / 2, height / 4 * 3, "GAME OVER!");
+        font = new Font("Monaco", Font.BOLD, 21);
+        StdDraw.setFont(font);
+        StdDraw.text(width / 2, height / 2, "Load Main Menu (M)");
+        StdDraw.text(width / 2, height / 2 - 1.6, "Quit (Q)");
         StdDraw.show();
     }
 

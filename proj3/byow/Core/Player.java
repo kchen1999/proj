@@ -20,7 +20,12 @@ public class Player {
     }
 
     private boolean moveHelper(WorldState ws, int x, int y) {
-        if (!ws.isWall(x, y) && !ws.isTile(x, y, ENEMY)) {
+        if (ws.isTile(x, y, ENEMY)) {
+            System.out.println("Game over");
+            Engine.setGameOver();
+            return false;
+        }
+        if (!ws.isWall(x, y)) {
             ws.setTile(x, y, PLAYER);
             ws.setTile(p.getX(), p.getY(), FLOOR);
             p = new Position(x, y);

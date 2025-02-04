@@ -4,25 +4,29 @@ import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import edu.princeton.cs.introcs.StdDraw;
 
-
 public class Engine {
     private static final int WIDTH = 80;
     private static final int HEIGHT = 30;
     private static final int KEYBOARD = 0;
     private static final int STRING = 1;
     private static final int HUD_TOP_OFFSET = 10;
-    private String seed;
-    private WorldState ws;
-    private Player user;
-    private Enemy enemy1;
-    private Enemy enemy2;
-    private TERenderer ter;
-    private Display display;
-    private boolean lineOfSight = false;
-    private int movesInCurrentView = 0;
+    private static String seed;
+    private static WorldState ws;
+    private static Player user;
+    private static Enemy enemy1;
+    private static Enemy enemy2;
+    private static TERenderer ter;
+    private static Display display;
+    private static boolean lineOfSight = false;
+    private static boolean gameOver = false;
+    private static int movesInCurrentView = 0;
 
     public static int getHudTopOffset() {
         return HUD_TOP_OFFSET;
+    }
+
+    public static void setGameOver() {
+        gameOver = true;
     }
 
     private void refreshMap() {
@@ -44,7 +48,7 @@ public class Engine {
         ter.renderFrame(ws.terrainGrid());
     }
 
-    private void playGame(char c) {
+    private void movePlayer(char c) {
         boolean validMove = user.move(ws, c);
         if (validMove) {
             enemy1.move(ws, user.getPosition());
@@ -80,8 +84,13 @@ public class Engine {
         movesInCurrentView = 0;
     }
 
+    private void resetGame() {
+        gameOver = false;
+        movesInCurrentView = 0;
+        lineOfSight = false;
+    }
 
-    private void startGame(int inputType, String input) {
+    private void playGame(int inputType, String input) {
         InputSource inputSource;
         if (inputType == KEYBOARD) {
             inputSource = new KeyboardInputSource();
@@ -127,7 +136,7 @@ public class Engine {
             prevChar = c;
         }
 
-        while (isLoaded) {
+        while (isLoaded && !gameOver) {
             refreshMap();
             StdDraw.pause(50);
 
@@ -151,19 +160,36 @@ public class Engine {
                     if (!lineOfSight && movesInCurrentView > ws.getTilesAhead()) {
                         toggleLineOfSight();
                     }
-                    playGame(c);
+                    movePlayer(c);
+                }
+                prevChar = c;
+            }
+        }
+        while (gameOver) {
+            display.loadGameOver();
+            if (inputSource.possibleNextInput()) {
+                char c = inputSource.getNextKey();
+                if (c == 'Q' && prevChar == ':') {
+                    System.exit(0);
+                } else {
+                    if (c == 'M') {
+                        resetGame();
+                        playGame(inputType, null);
+                        break;
+                    }
                 }
                 prevChar = c;
             }
         }
     }
 
+
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
      */
     public void interactWithKeyboard()  {
-        startGame(KEYBOARD, null);
+        playGame(KEYBOARD, null);
     }
 
     /**
@@ -195,7 +221,7 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-        startGame(STRING, input);
+        playGame(STRING, input);
         return ws.terrainGrid();
     }
 }

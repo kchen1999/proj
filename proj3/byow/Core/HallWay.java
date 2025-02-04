@@ -134,9 +134,13 @@ public class HallWay {
         drawHallWay(ws, path.getStart(), path.getEnd());
     }
 
-    public static void generate(WorldState ws, Set<Path> paths, int numOfRooms) {
+    private static void resetHallway() {
         connectedRooms.clear();
         unconnectedRooms.clear();
+    }
+
+    public static void generate(WorldState ws, Set<Path> paths, int numOfRooms) {
+        resetHallway();
         for (Path path : paths) {
             Room start = path.getStart();
             Room end = path.getEnd();

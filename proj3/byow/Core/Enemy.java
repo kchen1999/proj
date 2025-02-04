@@ -39,7 +39,12 @@ public class Enemy {
         System.out.println("Shortest path complete");
         int x = path.get(1).getX();
         int y = path.get(1).getY();
-        if (!ws.isTile(x, y, PLAYER) && !ws.isTile(x, y, ENEMY)) {
+        if (ws.isTile(x, y, PLAYER)) {
+            System.out.println("Game over");
+            Engine.setGameOver();
+            return;
+        }
+        if (!ws.isTile(x, y, ENEMY)) {
             ws.setTile(x, y, ENEMY);
             ws.setTile(p.getX(), p.getY(), FLOOR);
             p = new Position(x, y);

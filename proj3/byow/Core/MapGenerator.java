@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Random;
 
-
 public class MapGenerator {
     private static final TreeSet<Room> ROOMS = new TreeSet<>();
     private static final Set<Path> PATHS = new TreeSet<>();
@@ -98,6 +97,7 @@ public class MapGenerator {
     private void resetMap() {
         ROOMS.clear();
         PATHS.clear();
+        enemyPositions.clear();
     }
 
     public int randomMapLeftOffset() {
