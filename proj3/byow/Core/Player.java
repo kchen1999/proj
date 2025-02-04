@@ -19,35 +19,25 @@ public class Player {
         ws.setTile(p.getX(), p.getY(), PLAYER);
     }
 
+    private boolean moveHelper(WorldState ws, int x, int y) {
+        if (!ws.isWall(x, y) && !ws.isTile(x, y, ENEMY)) {
+            ws.setTile(x, y, PLAYER);
+            ws.setTile(p.getX(), p.getY(), FLOOR);
+            p = new Position(x, y);
+            return true;
+        }
+        return false;
+    }
+
     public boolean move(WorldState ws, char dir) {
         if (dir == 'W') {
-            if (!ws.isWall(p.getX(), p.getY() + 1) && !ws.isTile(p.getX(), p.getY() + 1, ENEMY)) {
-                ws.setTile(p.getX(), p.getY() + 1, PLAYER);
-                ws.setTile(p.getX(), p.getY(), FLOOR);
-                p = new Position(p.getX(), p.getY() + 1);
-                return true;
-            }
+            return moveHelper(ws, p.getX(),p.getY() + 1);
         } else if (dir == 'A') {
-            if (!ws.isWall(p.getX() - 1, p.getY()) && !ws.isTile(p.getX() - 1, p.getY(), ENEMY)) {
-                ws.setTile(p.getX() - 1, p.getY(), PLAYER);
-                ws.setTile(p.getX(), p.getY(), FLOOR);
-                p = new Position(p.getX() - 1, p.getY());
-                return true;
-            }
+            return moveHelper(ws, p.getX() - 1,p.getY());
         } else if (dir == 'S') {
-            if (!ws.isWall(p.getX(), p.getY() - 1) && !ws.isTile(p.getX(), p.getY() - 1, ENEMY)) {
-                ws.setTile(p.getX(), p.getY() - 1, PLAYER);
-                ws.setTile(p.getX(), p.getY(), FLOOR);
-                p = new Position(p.getX(), p.getY() - 1);
-                return true;
-            }
+            return moveHelper(ws, p.getX(),p.getY() - 1);
         } else if (dir == 'D') {
-            if (!ws.isWall(p.getX() + 1, p.getY()) && !ws.isTile(p.getX() + 1, p.getY(), ENEMY)) {
-                ws.setTile(p.getX() + 1, p.getY(), PLAYER);
-                ws.setTile(p.getX(), p.getY(), FLOOR);
-                p = new Position(p.getX() + 1, p.getY());
-                return true;
-            }
+            return moveHelper(ws, p.getX() + 1,p.getY());
         }
         return false; 
     }
