@@ -109,7 +109,7 @@ public class WorldState {
         if (isOutOfBounds(x, y) || tilesAhead < 0) {
             return;
         }
-        if (!isTile(x, y, PLAYER)) {
+        if (!isTile(x, y, PLAYER) && !isTile(x, y, ENEMY)) {
             setTile(x, y, worldTiles[x][y].getTile());
         }
         generateLineOfSight(x, y + 1, tilesAhead - 1);
