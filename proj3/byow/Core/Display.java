@@ -9,17 +9,27 @@ public class Display {
     private int height;
     private static final int LEFT_OFFSET = 5;
 
-    public void showHeadsUpDisplay(WorldState ws, int hudTopOffset) {
-        Font font = new Font("Monaco", Font.BOLD, 16);
-        StdDraw.setFont(font);
-        StdDraw.setPenColor(Color.WHITE);
+    private void showTileUnderMouse(WorldState ws, int hudTopOffset) {
+        String tileDescription = "";
         int mouseX = (int) StdDraw.mouseX();
         int mouseY = (int) StdDraw.mouseY();
         if ((mouseX < width && mouseX > 0 && mouseY < (height - Engine.getHudTopOffset() / 2) && mouseY > 0)) {
-            String tileDescription = ws.getTile((int) (StdDraw.mouseX()),
+            tileDescription = ws.getTile((int) (StdDraw.mouseX()),
                     (int) (StdDraw.mouseY() - (hudTopOffset / 2)));
-            StdDraw.textLeft(LEFT_OFFSET, height - 1, "Tile: " + tileDescription);
         }
+        StdDraw.textLeft(LEFT_OFFSET, height - 1.2, "Tile: " + tileDescription);
+    }
+
+    private void showNumOfMovesUntilFullView(int moves) {
+        StdDraw.textLeft(LEFT_OFFSET, 1.2, "Moves in current view: " + moves);
+    }
+
+    public void showHeadsUpDisplay(WorldState ws, int hudTopOffset, int moves) {
+        Font font = new Font("Monaco", Font.BOLD, 16);
+        StdDraw.setFont(font);
+        StdDraw.setPenColor(Color.WHITE);
+        showTileUnderMouse(ws, hudTopOffset);
+        showNumOfMovesUntilFullView(moves);
         StdDraw.show();
     }
 

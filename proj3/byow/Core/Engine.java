@@ -19,7 +19,7 @@ public class Engine {
     private TERenderer ter;
     private Display display;
     private boolean lineOfSight = false;
-    private int moves = 0;
+    private int movesInCurrentView = 0;
 
     public static int getHudTopOffset() {
         return HUD_TOP_OFFSET;
@@ -31,7 +31,7 @@ public class Engine {
         } else {
             ter.renderFrame(ws.terrainGrid());
         }
-        display.showHeadsUpDisplay(ws, HUD_TOP_OFFSET);
+        display.showHeadsUpDisplay(ws, HUD_TOP_OFFSET, movesInCurrentView);
     }
 
     private void generateMap() {
@@ -49,7 +49,7 @@ public class Engine {
         if (validMove) {
             enemy1.move(ws, user.getPosition());
             enemy2.move(ws, user.getPosition());
-            moves += 1;
+            movesInCurrentView += 1;
         }
         if (c == 'E') {
             ter.renderFrame(ws.showEnemyPaths(enemy1.getPath(), enemy2.getPath(), user, lineOfSight));
@@ -77,7 +77,7 @@ public class Engine {
 
     private void toggleLineOfSight() {
         lineOfSight = !lineOfSight;
-        moves = 0;
+        movesInCurrentView = 0;
     }
 
 
@@ -141,14 +141,14 @@ public class Engine {
                 } else {
                     if (c == 'Q') {
                         if (lineOfSight) {
-                            if (moves > ws.getTilesAhead() * ws.getTilesAhead()) {
+                            if (movesInCurrentView > ws.getTilesAhead() * ws.getTilesAhead()) {
                                 toggleLineOfSight();
                             }
                         } else {
                             toggleLineOfSight();
                         }
                     }
-                    if (!lineOfSight && moves > ws.getTilesAhead()) {
+                    if (!lineOfSight && movesInCurrentView > ws.getTilesAhead()) {
                         toggleLineOfSight();
                     }
                     playGame(c);

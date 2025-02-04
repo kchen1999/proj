@@ -9,9 +9,16 @@ import java.util.List;
 public class WorldState {
     private static final int TILES_AHEAD = 5;
     private static final TETile PLAYER = Tileset.AVATAR;
+    private static final TETile FLOOR = Tileset.FLOOR;
     private static final TETile BLANK = Tileset.NOTHING;
+    private static final TETile WALL = Tileset.WALL;
     private static final TETile ENEMY = Tileset.SAND;
     private static final TETile ENEMY_PATH = Tileset.ENEMY_PATH;
+    private static final String WALL1 = "wall";
+    private static final String FLOOR1 = "floor";
+    private static final String PLAYER1 = "player";
+    private static final String ENEMY1 = "enemy";
+    private static final String BLANK1 = "blank";
     private static int width;
     private static int height;
     private static TETile[][] world;
@@ -26,14 +33,14 @@ public class WorldState {
     }
 
     public static boolean isFloorTile(int x, int y) {
-        return world[x][y].equals(Tileset.FLOOR)|| world[x][y].equals(Tileset.FLOOR0)
+        return world[x][y].equals(FLOOR)|| world[x][y].equals(Tileset.FLOOR0)
                 || world[x][y].equals(Tileset.FLOOR1)|| world[x][y].equals(Tileset.FLOOR2)
                 || world[x][y].equals(Tileset.FLOOR3)|| world[x][y].equals(Tileset.FLOOR4)
                 || world[x][y].equals(Tileset.LIGHT);
     }
 
     public static boolean isWall(int x, int y) {
-        return world[x][y].equals(Tileset.WALL);
+        return world[x][y].equals(WALL);
     }
 
     public static boolean isBlank(int x, int y) {
@@ -50,13 +57,16 @@ public class WorldState {
 
     public static String getTile(int x, int y) {
         if (isWall(x, y)) {
-            return "wall";
-        } else if (isTile(x, y, Tileset.FLOOR)) {
-            return "floor";
+            return WALL1;
+        } else if (isTile(x, y, FLOOR)) {
+            return FLOOR1;
         } else if (isTile(x, y, PLAYER)) {
-            return "player";
-        } else {
-            return "blank";
+            return PLAYER1;
+        } else if (isTile(x, y, ENEMY)) {
+            return ENEMY1;
+        }
+        else {
+            return BLANK1;
         }
     }
 
