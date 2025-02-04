@@ -20,6 +20,7 @@ public class Engine {
     private static Display display;
     private static boolean lineOfSight = false;
     private static boolean gameOver = false;
+    private static boolean victory = false ;
     private static int movesInCurrentView = 0;
 
     public static int getHudTopOffset() {
@@ -28,6 +29,10 @@ public class Engine {
 
     public static void setGameOver() {
         gameOver = true;
+    }
+
+    public static void setVictory() {
+        victory = true;
     }
 
     private void refreshMap() {
@@ -88,6 +93,7 @@ public class Engine {
 
     private void resetGame() {
         gameOver = false;
+        victory = false;
         movesInCurrentView = 0;
         lineOfSight = false;
     }
@@ -125,15 +131,20 @@ public class Engine {
                     seedBuilder.setLength(0);
                     display.loadEnterRandomSeed(seedBuilder);
                 }
+
+            } else if (c == 'I') {
+                display.loadInstructions();
             } else if (c == 'Q' && prevChar == ':') {
-                GameSaver.save(seed, user.getPosition(), enemy1.getPosition(), enemy2.getPosition());
                 if (inputType == KEYBOARD) {
                     System.exit(0);
                 }
+                GameSaver.save(seed, user.getPosition(), enemy1.getPosition(), enemy2.getPosition());
             } else if (c == 'L') {
                 loadWorldState();
                 isLoaded = true;
                 break;
+            } else if (c == 'M') {
+                display.loadMainMenu();
             }
             prevChar = c;
         }
@@ -168,7 +179,7 @@ public class Engine {
             }
         }
         while (gameOver) {
-            display.loadGameOver();
+            display.loadGameOver(victory);
             if (inputSource.possibleNextInput()) {
                 char c = inputSource.getNextKey();
                 if (c == 'Q' && prevChar == ':') {

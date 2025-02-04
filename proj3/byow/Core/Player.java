@@ -8,6 +8,7 @@ public class Player {
     private static final TETile PLAYER = Tileset.AVATAR;
     private static final TETile FLOOR = Tileset.FLOOR;
     private static final TETile ENEMY = Tileset.SAND;
+    private static final TETile FLOWER = Tileset.FLOWER;
 
     public Position getPosition() {
         return p;
@@ -22,6 +23,11 @@ public class Player {
     private boolean moveHelper(WorldState ws, int x, int y) {
         if (ws.isTile(x, y, ENEMY)) {
             Engine.setGameOver();
+            return false;
+        }
+        if (ws.isTile(x, y, FLOWER)) {
+            Engine.setGameOver();
+            Engine.setVictory();
             return false;
         }
         if (!ws.isWall(x, y)) {

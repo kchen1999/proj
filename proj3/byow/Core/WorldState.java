@@ -80,7 +80,8 @@ public class WorldState {
                 i++;
                 continue;
             }
-            if (!isTile(tile.getX(), tile.getY(), PLAYER) && !isTile(tile.getX(), tile.getY(), ENEMY)) {
+            if (!isTile(tile.getX(), tile.getY(), PLAYER) && !isTile(tile.getX(), tile.getY(), ENEMY)
+                    && !isTile(tile.getX(), tile.getY(), FLOWER)) {
                 setTile(tile.getX(), tile.getY(), ENEMY_PATH);
             }
         }
