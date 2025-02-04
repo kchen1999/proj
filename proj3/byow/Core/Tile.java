@@ -52,6 +52,10 @@ public class Tile implements Comparable<Tile> {
         this.adj = adj;
     }
 
+    public void setTile(TETile tile) {
+        this.tile = tile;
+    }
+
     public Tile(TETile tile, int x, int y) {
         this.tile = tile;
         this.x = x;

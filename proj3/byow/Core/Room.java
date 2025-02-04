@@ -8,6 +8,8 @@ import java.util.Random;
 public class Room implements Comparable<Room> {
     private static final TETile TILE = Tileset.FLOOR;
     private static final TETile WALL = Tileset.WALL;
+    private static final TETile LIGHT = Tileset.LIGHT;
+    private static final TETile FLOWER = Tileset.FLOWER;
     private Position topLeft;
     private Position bottomRight;
     private Position lightSource;
@@ -72,9 +74,12 @@ public class Room implements Comparable<Room> {
         return Math.max(Math.abs(x - lightSource.getX()), Math.abs(y - lightSource.getY()));
     }
 
-    private void turnLightingOn(WorldState ws) {
+    public void turnLightingOn(WorldState ws) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
+                if (ws.isTile(i, j, FLOWER)) {
+                    continue;
+                }
                 int x = topLeft.getX() + i;
                 int y = topLeft.getY() - j;
                 if (distanceFromLightSource(x, y) == 1) {
@@ -98,7 +103,7 @@ public class Room implements Comparable<Room> {
         }
         if (isLightSource) {
             turnLightingOn(ws);
-            ws.setTile(lightSource.getX(), lightSource.getY(), Tileset.LIGHT);
+            ws.setTile(lightSource.getX(), lightSource.getY(), LIGHT);
         }
         drawWalls(ws);
     }

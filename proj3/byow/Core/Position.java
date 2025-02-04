@@ -1,6 +1,6 @@
 package byow.Core;
 
-public class Position {
+public class Position implements Comparable<Position> {
     private int x;
     private int y;
 
@@ -15,5 +15,13 @@ public class Position {
 
     public int getY() {
         return y;
+    }
+
+    @Override
+    public int compareTo(Position p) {
+        if (this.x == p.x && this.y == p.y) {
+            return 0;
+        }
+        return this.x - p.x;
     }
 }

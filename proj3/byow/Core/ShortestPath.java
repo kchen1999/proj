@@ -21,15 +21,25 @@ public class ShortestPath {
         }
     }
 
-    /**
-     * Return a list of tiles representing the shortest path from the enemy to the player.
-     * @param g The graph to use.
-     * @param stlon The longitude of the start location.
-     * @param stlat The latitude of the start location.
-     * @return A list of node id's in the order visited on the shortest path.
-     */
+    private static void resetVisitedTiles(Set<Tile> allVisitedTiles) {
+        for (Tile tile : allVisitedTiles) {
+            tile.setDistFromS(Integer.MAX_VALUE);
+            tile.setDistToT(0);
+            tile.setPrev(null);
+        }
+    }
+
+    private static LinkedList<Tile> generatePath(Tile s, Tile t) {
+        LinkedList<Tile> path = new LinkedList<>();
+        while (t.getPrev() != null) {
+            path.addFirst(t);
+            t = t.getPrev();
+        }
+        path.addFirst(s);
+        return path;
+    }
+
     public static List<Tile> generate(Tile s, Tile t) {
-        LinkedList<Tile> list = new LinkedList<>();
         PriorityQueue<Tile> fringe = new PriorityQueue<>();
         Set<Tile> allVisitedTiles = new HashSet<>();
         fringe.add(s);
@@ -46,16 +56,8 @@ public class ShortestPath {
                 allVisitedTiles.add(w);
             }
         }
-        while (t.getPrev() != null) {
-            list.addFirst(t);
-            t = t.getPrev();
-        }
-        list.addFirst(s);
-        for (Tile tile : allVisitedTiles) {
-            tile.setDistFromS(Integer.MAX_VALUE);
-            tile.setDistToT(0);
-            tile.setPrev(null);
-        }
-        return list;
+        LinkedList<Tile> shortestPath = generatePath(s, t);
+        resetVisitedTiles(allVisitedTiles);
+        return shortestPath;
     }
 }

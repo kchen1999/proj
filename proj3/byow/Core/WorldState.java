@@ -13,11 +13,13 @@ public class WorldState {
     private static final TETile WALL = Tileset.WALL;
     private static final TETile ENEMY = Tileset.SAND;
     private static final TETile ENEMY_PATH = Tileset.ENEMY_PATH;
+    private static final TETile FLOWER = Tileset.FLOWER;
     private static final String WALL1 = "wall";
     private static final String FLOOR1 = "floor";
     private static final String PLAYER1 = "player";
     private static final String ENEMY1 = "enemy";
     private static final String BLANK1 = "blank";
+    private static final String FLOWER1 = "flower";
     private static int width;
     private static int height;
     private static TETile[][] world;
@@ -50,7 +52,7 @@ public class WorldState {
         return TILES_AHEAD;
     }
 
-    public static Tile[][] getWorldTiles() {
+    public Tile[][] getWorldTiles() {
         return worldTiles;
     }
 
@@ -63,6 +65,8 @@ public class WorldState {
             return PLAYER1;
         } else if (isTile(x, y, ENEMY)) {
             return ENEMY1;
+        } else if (isTile(x, y, FLOWER)) {
+            return FLOWER1;
         }
         else {
             return BLANK1;
@@ -96,7 +100,7 @@ public class WorldState {
     private static void hideWorld() {
         for (int x = 0; x < width; x += 1) {
             for (int y = 0; y < height; y += 1) {
-                if (isTile(x, y, PLAYER) || isTile(x, y, ENEMY)) {
+                if (isTile(x, y, PLAYER) || isTile(x, y, ENEMY) || isTile(x, y, FLOWER)) {
                     continue;
                 }
                 world[x][y] = BLANK;

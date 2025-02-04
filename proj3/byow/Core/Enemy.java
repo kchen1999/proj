@@ -30,17 +30,16 @@ public class Enemy {
     public void move(WorldState ws, Position playerPosition) {
         Tile[][] worldTiles = ws.getWorldTiles();
         path = ShortestPath.generate(worldTiles[p.getX()][p.getY()],
-                worldTiles[playerPosition.getX()][playerPosition.getY()]);
+                worldTiles[playerPosition.getX()][playerPosition.getY()]); /*
         System.out.println("Enemy position: x: " + p.getX() +  "y: " + p.getY());
         System.out.println("Player position: x: " + playerPosition.getX() + " y: " + playerPosition.getY());
         for (Tile t : path) {
             System.out.println("Tile position: x: " + t.getX() + " y: " + t.getY());
         }
-        System.out.println("Shortest path complete");
+        System.out.println("Shortest path complete"); */
         int x = path.get(1).getX();
         int y = path.get(1).getY();
         if (ws.isTile(x, y, PLAYER)) {
-            System.out.println("Game over");
             Engine.setGameOver();
             return;
         }

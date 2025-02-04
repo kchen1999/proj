@@ -21,7 +21,6 @@ public class Player {
 
     private boolean moveHelper(WorldState ws, int x, int y) {
         if (ws.isTile(x, y, ENEMY)) {
-            System.out.println("Game over");
             Engine.setGameOver();
             return false;
         }

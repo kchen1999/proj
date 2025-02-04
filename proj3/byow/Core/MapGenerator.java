@@ -14,10 +14,15 @@ public class MapGenerator {
     private static int width;
     private static int height;
     private static Position playerPosition;
+    private static Position flowerPosition;
     private static Random random;
 
     public Position getPlayerPosition() {
         return playerPosition;
+    }
+
+    public Position getFlowerPosition() {
+        return flowerPosition;
     }
 
     public List<Position> getEnemyPositions() {
@@ -144,7 +149,13 @@ public class MapGenerator {
             }
             i += 1;
         }
+    }
 
+    private void generateFlowerPosition() {
+        for (Room room : ROOMS.descendingSet()) {
+            flowerPosition = room.generateRandomPosition(random);
+            break;
+        }
     }
 
     public WorldState generate() {
@@ -161,13 +172,13 @@ public class MapGenerator {
                 Room room = rg.generate();
                 if (!isOverlap(room)) {
                     room.draw(ws);
-                    room.printRoom();
                     addPath(room);
                     ROOMS.add(room);
                     break;
                 }
             }
         }
+        generateFlowerPosition();
         generatePlayerPosition();
         generateEnemyPositions(numOfEnemies);
         HallWay.generate(ws, PATHS, numOfRooms);

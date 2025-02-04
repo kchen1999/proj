@@ -15,6 +15,7 @@ public class Engine {
     private static Player user;
     private static Enemy enemy1;
     private static Enemy enemy2;
+    private static Flower flower;
     private static TERenderer ter;
     private static Display display;
     private static boolean lineOfSight = false;
@@ -41,6 +42,7 @@ public class Engine {
     private void generateMap() {
         MapGenerator mg = new MapGenerator(Long.parseLong(seed), WIDTH, HEIGHT);
         ws = mg.generate();
+        flower = new Flower(ws, mg.getFlowerPosition());
         ws.setWorldTiles();
         user = new Player(ws, mg.getPlayerPosition());
         enemy1 = new Enemy(ws, mg.getEnemyPositions().get(0));

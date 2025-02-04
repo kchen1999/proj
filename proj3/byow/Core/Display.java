@@ -20,7 +20,9 @@ public class Display {
     }
 
     private void showNumOfMovesUntilFullView(int movesInCurrentView) {
-        StdDraw.textLeft(LEFT_OFFSET, 1.2, "Moves in current view: " + movesInCurrentView);
+        StdDraw.textLeft(LEFT_OFFSET, 1.2, "Moves in current view: " + movesInCurrentView +
+                "       Press Q to toggle view (after 26 moves)" +
+                "       Press E to show enemy paths");
     }
 
     public void showHeadsUpDisplay(WorldState ws, int hudTopOffset, int movesInCurrentView) {
@@ -48,7 +50,7 @@ public class Display {
         font = new Font("Monaco", Font.BOLD, 21);
         StdDraw.setFont(font);
         StdDraw.text(width / 2, height / 2, "Load Main Menu (M)");
-        StdDraw.text(width / 2, height / 2 - 1.6, "Quit (Q)");
+        StdDraw.text(width / 2, height / 2 - 1.6, "Quit (:Q)");
         StdDraw.show();
     }
 
@@ -62,7 +64,7 @@ public class Display {
         StdDraw.setFont(font);
         StdDraw.text(width / 2, height / 2, "New Game (N)");
         StdDraw.text(width / 2, height / 2 - 1.6, "Load Game (L)");
-        StdDraw.text(width / 2, height / 2 - 3.2, "Quit (Q)");
+        StdDraw.text(width / 2, height / 2 - 3.2, "Quit (:Q)");
         StdDraw.show();
     }
 
